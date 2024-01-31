@@ -3,9 +3,15 @@ library(shiny)
 source("global.R")
 
 
+# Source Functions
+source("./modules/dbh_classes_generate.R")
+
+
+input_data_model <- read.csv2("./data/input_data.csv")
+
 function(input, output, session) {
         observe({
-                if (!is.null(input$loadFile)) {
+                if (!is.null(input$uploadFile)) {
                         tryCatch({
                                 uploadedFile <- read.csv2(input$uploadFile$datapath)
                                 setUploadedData(uploadedFile)
@@ -17,8 +23,10 @@ function(input, output, session) {
         
         observeEvent(input$loadFile, {
                 output$fileStatus <- renderText({
-                        if (!is.null(my_data)) {
+                        if (!is.null(user_data)) {
                                 "Arquivo carregado com sucesso!"
+                                # Generate DBH Classes
+                                dbh_classes_generate(user_data)
                         } else {
                                 "Por favor, carregue um arquivo antes de prosseguir."
                         }
@@ -28,7 +36,7 @@ function(input, output, session) {
         # Data frame
         output$tbl <- DT::renderDataTable({
                 DT::datatable(
-                        my_data, 
+                        df,
                         options = list(
                                 pageLength = 6, 
                                 rownames = FALSE,
@@ -36,5 +44,25 @@ function(input, output, session) {
                         )
                 )
         })
+        
+        # Download - Data Analysis
+        output$DownloadDataAnalysis <- downloadHandler(
+                filename = function() {
+                        paste('Dados_Processados', Sys.Date(), '.csv', sep = '_')
+                },
+                content = function(file) {
+                        write.csv2(df, file, row.names = FALSE, fileEncoding = 'latin1')
+                }
+        )
+        
+        # Download - Spreadsheet Model
+        output$DownloadData <- downloadHandler(
+                filename = function() {
+                        paste('Planilha_Modelo_ForestInsight', '.csv', sep = '')
+                },
+                content = function(file) {
+                        write.csv2(input_data_model, file, row.names = FALSE, fileEncoding = 'latin1')
+                }
+        )
 }
 
