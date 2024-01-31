@@ -1,33 +1,27 @@
-#' @name dbh_class_chart
+#' @name dbh_classes_chart
 #' 
 #' @title DBH Class Chart
 #' 
-#' @description This function takes a data frame with DBH Class column and makes 
+#' @description This function takes a data frame with a DBH Class column and makes 
 #' a bar chart with the DBH classes distribution of trees.
 #' 
-#' @param dataframe with DBH class column
+#' @param df Data frame with DBH class column.
+#' @param threshold DAP threshold for filtering.
+#' @param output_dir Directory to save the plot.
 #' 
-#' @return a bar chart with the DBH classes distribution of trees
+#' @return A ggplot object representing the DBH classes distribution of trees.
 #' 
-dbh_class_chart <- function(df) {
-        png(
-                paste0('./saidas/graficos/',
-                       '_umf_', umf, '_upa_', upa , '_', flona, '.png'),
-                width = 1500,
-                height = 950,
-                units = 'px',
-                res = 300
-        )
+dbh_classes_chart <- function(df, threshold = 40) {
         
-        DBH_classes_plt <- df %>%
-                filter(dap >= 40) %>%
-                group_by(classe, dap) %>%
-                summarize(N = n()) %>%
-                ggplot(aes(x = classe)) +
-                geom_bar(stat = 'identity', aes(y = N), fill = 'steelblue') +
-                scale_y_continuous(
-                        labels = scales::label_number(big.mark = '.')
-                ) +
+        # Filter data
+        df_filtered <- df[df$dap >= threshold, ] %>%
+                group_by(classe2) %>%
+                summarize(N = n())
+        
+        # Create ggplot
+        DBH_classes_plot <- ggplot(df_filtered, aes(x = classe2, y = N)) +
+                geom_bar(stat = 'identity', fill = 'steelblue') +
+                scale_y_continuous(labels = scales::label_number(big.mark = '.')) +
                 theme(
                         axis.text.x = element_text(angle = 50, size = 7),
                         axis.text.y = element_text(size = 8),
@@ -41,8 +35,6 @@ dbh_class_chart <- function(df) {
                         y = 'Número de Árvores'
                 )
         
-        print(DBH_classes_plt)
-        
-        dev.off()
+        print(DBH_classes_plot)
+        assign('DBH_classes_plot', 'DBH_classes_plot', inherits = TRUE, envir = .GlobalEnv)
 }
-
