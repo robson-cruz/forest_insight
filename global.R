@@ -8,13 +8,19 @@ library(magrittr, warn.conflicts = FALSE)
 
 
 # Load data from the app
-my_data <- NULL
+user_data <- NULL
 
 setUploadedData <- function(data) {
-        my_data <<- data
+        user_data <<- data
         
-        my_data %<>%
+        user_data %<>%
                 mutate(categoria = R.utils::capitalize(categoria)) %>%
-                mutate()
+                # Diameter at Breast Height - DBH ("dap" in Portuguese)
+                mutate(dap = cap / pi) %>%
+                # Basal area in square meters
+                mutate(g = pi * dap**2 / 40000) %>%
+                # Geometric volume
+                mutate(vol_geo = g * altura * 0.7)
         
+        assign("user_data", user_data, inherits = TRUE, envir = .GlobalEnv)
 }
