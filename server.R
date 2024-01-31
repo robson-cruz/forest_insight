@@ -5,6 +5,7 @@ source("global.R")
 
 # Source Functions
 source("./modules/dbh_classes_generate.R")
+source("./modules/dbh_classes_chart.R")
 
 
 input_data_model <- read.csv2("./data/input_data.csv")
@@ -24,9 +25,10 @@ function(input, output, session) {
         observeEvent(input$loadFile, {
                 output$fileStatus <- renderText({
                         if (!is.null(user_data)) {
-                                "Arquivo carregado com sucesso!"
-                                # Generate DBH Classes
+                                # Generate DBH Classes and DBH plot
                                 dbh_classes_generate(user_data)
+                                "Arquivo carregado com sucesso!"
+                                
                         } else {
                                 "Por favor, carregue um arquivo antes de prosseguir."
                         }
@@ -38,20 +40,41 @@ function(input, output, session) {
                 DT::datatable(
                         df,
                         options = list(
-                                pageLength = 6, 
+                                pageLength = 6,
                                 rownames = FALSE,
                                 language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese.json')
                         )
                 )
         })
+
+        output$DBH_classes_plot <- renderImage({
+                outfile <- tempfile(fileext = '.png')
+                png(outfile, width = 650, height = 450, res = 150)
+                dbh_classes_chart(df)
+                dev.off()
+                list(src = outfile, alt = "Distribuiçao Diamétrica")
+        }, deleteFile = TRUE)
         
         # Download - Data Analysis
         output$DownloadDataAnalysis <- downloadHandler(
                 filename = function() {
-                        paste('Dados_Processados', Sys.Date(), '.csv', sep = '_')
+                        paste('Dados_Processados_', Sys.Date(), '.zip', sep = '')
                 },
                 content = function(file) {
-                        write.csv2(df, file, row.names = FALSE, fileEncoding = 'latin1')
+                        temp_dir <- tempdir()
+                        
+                        # Save DBH classes plot as an image
+                        plot_file <- file.path(temp_dir, 'DBH_Classes_Plot.png')
+                        png(plot_file, width = 1500, height = 950, res = 300)
+                        dbh_classes_chart(df)
+                        dev.off()
+                        
+                        # Save the data frame as a CSV file
+                        df_file <- file.path(temp_dir, 'Processed_Data.csv')
+                        write.csv2(df, df_file, row.names = FALSE, fileEncoding = 'latin1')
+                        
+                        # Zip files
+                        zip(file, c(plot_file, df_file))
                 }
         )
         
@@ -64,5 +87,9 @@ function(input, output, session) {
                         write.csv2(input_data_model, file, row.names = FALSE, fileEncoding = 'latin1')
                 }
         )
+        
+        session$onSessionEnded(function() {
+                stopApp(returnValue = invisible())
+        })
 }
 
