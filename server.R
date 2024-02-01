@@ -6,7 +6,8 @@ source("global.R")
 # Source Functions
 source("./modules/dbh_classes_generate.R")
 source("./modules/dbh_classes_chart.R")
-
+source("./modules/drop_duplicated_rows.R")
+source("./modules/scientific_name_clean.R")
 
 input_data_model <- read.csv2("./data/input_data.csv")
 
@@ -27,7 +28,10 @@ function(input, output, session) {
                         if (!is.null(user_data)) {
                                 # Generate DBH Classes and DBH plot
                                 dbh_classes_generate(user_data)
-                                "Arquivo carregado com sucesso!"
+                                dbh_classes_chart(df)
+                                drop_duplicated_rows(df)
+                                scientific_name_clean(df)
+                                "Análise Finalizada!"
                                 
                         } else {
                                 "Por favor, carregue um arquivo antes de prosseguir."
@@ -47,34 +51,22 @@ function(input, output, session) {
                 )
         })
 
-        output$DBH_classes_plot <- renderImage({
-                outfile <- tempfile(fileext = '.png')
-                png(outfile, width = 650, height = 450, res = 150)
-                dbh_classes_chart(df)
-                dev.off()
-                list(src = outfile, alt = "Distribuiçao Diamétrica")
-        }, deleteFile = TRUE)
+        # output$DBH_classes_plot <- renderImage({
+        #         outfile <- tempfile(fileext = '.png')
+        #         png(outfile, width = 650, height = 450, res = 150)
+        #         dbh_classes_chart(df)
+        #         dev.off()
+        #         list(src = outfile, alt = "Distribuiçao Diamétrica")
+        # }, deleteFile = TRUE)
         
-        # Download - Data Analysis
         output$DownloadDataAnalysis <- downloadHandler(
                 filename = function() {
                         paste('Dados_Processados_', Sys.Date(), '.zip', sep = '')
                 },
                 content = function(file) {
-                        temp_dir <- tempdir()
-                        
-                        # Save DBH classes plot as an image
-                        plot_file <- file.path(temp_dir, 'DBH_Classes_Plot.png')
-                        png(plot_file, width = 1500, height = 950, res = 300)
-                        dbh_classes_chart(df)
-                        dev.off()
-                        
-                        # Save the data frame as a CSV file
-                        df_file <- file.path(temp_dir, 'Processed_Data.csv')
+                        df_file <- file.path("./output", 'Inventario_Processado.csv')
                         write.csv2(df, df_file, row.names = FALSE, fileEncoding = 'latin1')
-                        
-                        # Zip files
-                        zip(file, c(plot_file, df_file))
+                        zip(file, c("./output", df_file))
                 }
         )
         
@@ -92,4 +84,3 @@ function(input, output, session) {
                 stopApp(returnValue = invisible())
         })
 }
-
