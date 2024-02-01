@@ -14,7 +14,7 @@ shinyUI(
                         tabPanel(
                                 "Carregar Arquivo",
                                 fileInput("uploadFile", "Selecione a planilha"),
-                                actionButton("loadFile", "Carregar arquivo"),
+                                actionButton("loadFile", "Rodar Análise"),
                                 textOutput("fileStatus")
                         ),
                         tabPanel("Ver Dados", DT::dataTableOutput('tbl')),
