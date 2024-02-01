@@ -10,7 +10,7 @@
 #' @param output_dir Directory to save the plot.
 #' 
 #' @return A ggplot object representing the DBH classes distribution of trees.
-#' 
+#'
 dbh_classes_chart <- function(df, threshold = 40) {
         
         # Filter data
@@ -18,7 +18,14 @@ dbh_classes_chart <- function(df, threshold = 40) {
                 group_by(classe2) %>%
                 summarize(N = n())
         
-        # Create ggplot
+        # Create ggplot and save as an image
+        png(
+                paste0('./output/Graficos/Distribuicao_Diametrica/',
+                       'Distribuicao_Diametrica', '.png'),
+                width = 1500,
+                height = 950,
+                res = 300
+        )
         DBH_classes_plot <- ggplot(df_filtered, aes(x = classe2, y = N)) +
                 geom_bar(stat = 'identity', fill = 'steelblue') +
                 scale_y_continuous(labels = scales::label_number(big.mark = '.')) +
@@ -34,7 +41,8 @@ dbh_classes_chart <- function(df, threshold = 40) {
                         x = 'Classes de Diâmetro (cm)',
                         y = 'Número de Árvores'
                 )
-        
         print(DBH_classes_plot)
-        assign('DBH_classes_plot', 'DBH_classes_plot', inherits = TRUE, envir = .GlobalEnv)
+        dev.off()
+
+        assign('DBH_classes_plot', 'DBH_classes_plot', envir = .GlobalEnv)
 }
