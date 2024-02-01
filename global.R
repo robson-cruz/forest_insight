@@ -20,7 +20,9 @@ setUploadedData <- function(data) {
                 # Basal area in square meters
                 mutate(g = pi * dap**2 / 40000) %>%
                 # Geometric volume
-                mutate(vol_geo = g * altura * 0.7)
+                mutate(vol_geo = g * altura * 0.7) %>%
+                # Define 'qf' column as a factor
+                mutate(qf = factor(qf, levels = c(1L, 2L, 3L)))
         
         assign("user_data", user_data, inherits = TRUE, envir = .GlobalEnv)
 }
