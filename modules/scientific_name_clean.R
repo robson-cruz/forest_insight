@@ -1,14 +1,23 @@
-#' scientific_name_clean function
+#' @name scientific_name_clean
+#' 
+#' @title Scientific Name Clean
 #' 
 #' @description 
 #' This function takes a data frame from a global forest inventory and points 
 #' out typos and taxonomic synonym by using the globalnames API from
 #' http://verifier.globalnames.org/data_sources
 #' 
-#' @param dataset
-#' 
- 
-
+#' @param dataframe
+#'
+#'@import httr
+#'@import jsonlite
+#'@import magrittr
+#'@import stringr
+#'@import dplyr
+#'@importFrom tibble rowid_to_column
+#'@importFrom readr read_csv2
+#'@importFrom tidyr unnest_wider
+#'
 library(httr)
 library(jsonlite)
 library(magrittr)
@@ -111,26 +120,7 @@ scientific_name_clean <- function(df) {
                                                    'Em Perigo'))
                 ) %>%
                 select(-c(id))
-        
-        # Filter species that not have occurrence in "Pará" state
-        occurrence_issue <- df %>%
-                mutate(
-                        aux_name = if_else(typo == TRUE, nome_aceito, nome_cientifico)
-                ) %>%
-                left_join(reflora,
-                          by = c("aux_name" = "specieReflora"),
-                          relationship = "many-to-many") %>%
-                distinct(num_arvore, .keep_all = TRUE) %>%
-                filter(locationID != "PA") %>%
-                select(num_arvore, ut, nome_cientifico, nome_aceito, locationID)
-        
-        if (nrow(occurrence_issue > 0)) {
-                write.csv2(occurrence_issue,
-                           "./output/warnings/especies_sem_ocorrencia_conhecida_PA.csv",
-                           row.names = FALSE,
-                           fileEncoding = "latin1")
-        }
-        
+
         # Filter typo and save it
         typo <- df %>%
                 filter(typo == TRUE) %>%
@@ -138,7 +128,7 @@ scientific_name_clean <- function(df) {
         
         if (nrow(typo > 0)) {
                 write.csv2(typo,
-                           "./output/warnings/erro_digitacao.csv",
+                           "./output/Pendencias/Erros_Digitacao.csv",
                            row.names = FALSE,
                            fileEncoding = "latin1")
         }
@@ -151,11 +141,11 @@ scientific_name_clean <- function(df) {
         
         if (nrow(synonyms > 0)) {
                 write.csv2(synonyms,
-                           "./output/warnings/sinonimos.csv",
+                           "./output/Pendencias/sinonimos_taxonomicos.csv",
                            row.names = FALSE,
                            fileEncoding = "latin1")
         }
         
         # Assign the new data frame to the user's global environment
-        assign("df", df, inherits = TRUE, envir = .GlobalEnv)
+        assign("df", df, envir = .GlobalEnv)
 }
