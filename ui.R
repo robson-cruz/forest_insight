@@ -51,7 +51,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'dapUt'",
-                   plotOutput("")
+                   plotOutput("BoxPlot_DBH_by_Plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'dap'",
