@@ -12,6 +12,7 @@ source("./modules/drop_duplicated_rows.R")
 source("./modules/scientific_name_clean.R")
 source("./modules/qf_chart.R")
 source("./modules/eco_status_chart.R")
+source("./modules/dbh_by_ut_chart.R")
 
 
 input_data_model <- read.csv2("./data/input_data.csv")
@@ -83,15 +84,19 @@ function(input, output, session) {
         
         output$DBH_classes_plot <- renderPlot({
                 dbh_classes_chart(df)
-        }, width = 700, res = 150)
+        }, width = 1280, height = 720, res = 150)
         
         output$qf_plot <- renderPlot({
                 qf_chart(df)
-        }, width = 700, res = 150)
+        }, width = 1280, height = 720, res = 150)
         
         output$status_cutting_plot <- renderPlot({
                 eco_status_chart(df)
-        }, width = 700, res = 150)
+        }, width = 1280, height = 720, res = 150)
+        
+        output$BoxPlot_DBH_by_Plt <- renderPlot({
+                dbh_over_ut(df)
+        }, width = 1280, height = 720, res = 150)
         
         output$downloadAnalise <- downloadHandler(
                 filename = function() {
