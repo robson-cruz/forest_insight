@@ -1,46 +1,72 @@
 # server.R
 library(shiny)
+library(ggplot2)
+
+
+# Source script
 source("global.R")
-
-
 # Source Functions
 source("./modules/dbh_classes_generate.R")
 source("./modules/dbh_classes_chart.R")
 source("./modules/drop_duplicated_rows.R")
 source("./modules/scientific_name_clean.R")
+source("./modules/qf_chart.R")
+
 
 input_data_model <- read.csv2("./data/input_data.csv")
 
 function(input, output, session) {
         observe({
-                if (!is.null(input$uploadFile)) {
+                if (!is.null(input$uploadAem)) {
                         tryCatch({
-                                uploadedFile <- read.csv2(input$uploadFile$datapath)
-                                setUploadedData(uploadedFile)
+                                uploadAem <- read.csv2(input$uploadAem$datapath)
+                                setUploadAem(uploadAem)
+                                "Click em Fazer upload."
                         }, error = function(e) {
-                                print(paste("Erro ao ler o arquivo:", e))
+                                print(paste("Erro ao ler o arquivo de Áreas de Efetivo Manejo:", e))
                         })
                 }
         })
         
-        observeEvent(input$loadFile, {
-                output$fileStatus <- renderText({
-                        if (!is.null(user_data)) {
-                                # Generate DBH Classes and DBH plot
-                                dbh_classes_generate(user_data)
-                                dbh_classes_chart(df)
+        observe({
+                if (!is.null(input$uploadInventario)) {
+                        tryCatch({
+                                uploadInventario <- read.csv2(input$uploadInventario$datapath)
+                                setUploadedData(uploadInventario)
+                                "Clik em Fazer upload e Rodar Análise."
+                        }, error = function(e) {
+                                print(paste("Erro ao ler o arquivo do Inventário:", e))
+                        })
+                }
+        })
+        
+        observeEvent(input$uploadFileAem, {
+                output$fileStatusAem <- renderText({
+                        if (!is.null(aem)) {
+                                "Dados Enviados com Sucesso."
+                        } else {
+                                "Por favor, carregue um arquivo válido antes de prosseguir."
+                        }
+                })
+        })
+        
+        observeEvent(input$uploadFileInventario, {
+                output$fileStatusInventario <- renderText({
+                        if (!is.null(inventario)) {
+                                inventario %<>% left_join(aem, by = 'ut')
+                                dbh_classes_generate(inventario)
                                 drop_duplicated_rows(df)
                                 scientific_name_clean(df)
-                                "Análise Finalizada!"
+                                "Dados Processados com Sucesso.Veja Análise"
                                 
                         } else {
-                                "Por favor, carregue um arquivo antes de prosseguir."
+                                "Por favor, carregue um arquivo válido antes de prosseguir."
                         }
                 })
         })
         
         # Data frame
-        output$tbl <- DT::renderDataTable({
+        output$verDados <- DT::renderDataTable({
                 DT::datatable(
                         df,
                         options = list(
@@ -50,16 +76,19 @@ function(input, output, session) {
                         )
                 )
         })
-
-        # output$DBH_classes_plot <- renderImage({
-        #         outfile <- tempfile(fileext = '.png')
-        #         png(outfile, width = 650, height = 450, res = 150)
-        #         dbh_classes_chart(df)
-        #         dev.off()
-        #         list(src = outfile, alt = "Distribuiçao Diamétrica")
-        # }, deleteFile = TRUE)
+        output$summary <- renderPrint({
+                summary(df[, c("dap", "altura", "qf", "g", "vol_geo", "categoria2")])
+        })
         
-        output$DownloadDataAnalysis <- downloadHandler(
+        output$DBH_classes_plot <- renderPlot({
+                dbh_classes_chart(df)
+        }, width = 700, res = 150)
+        
+        output$qf_plot <- renderPlot({
+                qf_chart(df)
+        }, width = 700, res = 150)
+        
+        output$downloadAnalise <- downloadHandler(
                 filename = function() {
                         paste('Dados_Processados_', Sys.Date(), '.zip', sep = '')
                 },
@@ -71,7 +100,7 @@ function(input, output, session) {
         )
         
         # Download - Spreadsheet Model
-        output$DownloadData <- downloadHandler(
+        output$DownloadDataModel <- downloadHandler(
                 filename = function() {
                         paste('Planilha_Modelo_ForestInsight', '.csv', sep = '')
                 },
