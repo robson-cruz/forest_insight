@@ -2,7 +2,11 @@
         font-size: 20px;
 }
 
-.nav {
+.navbar {
+        font-size: 20px;
+}
+
+.dropdown-menu li {
         font-size: 18px;
 }
 
@@ -12,4 +16,20 @@
 
 .tab-pane a {
         font-size: 28px;
+}
+
+.btn.btn-default.shiny-download-link.shiny-bound-output {
+        background: orange;
+        font-size: 28px;
+}
+
+.btn.btn-default.btn-file {
+        background: orange;
+        font-size: 18px;
+}
+
+.btn.btn-default.action-button.shiny-bound-input {
+        background: rgb(6, 128, 61);
+        font-size: 20px;
+        color: white;
 }
