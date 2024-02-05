@@ -16,7 +16,7 @@ dbh_over_ut <- function(df) {
     # Open the graphic devices to save the box plot
     png(
         paste0('./output/Graficos/Distribuicao_Diametrica/',
-               'Distribuicao_DAP_UT', '.png'),
+               'Distribuicao_Dap_UT', '.png'),
         width = 1500,
         height = 950,
         units = 'px',
@@ -43,6 +43,7 @@ dbh_over_ut <- function(df) {
         )
     
     # Close the graphic devices and returns the plot
+    print(BoxPlot_DBH_by_Plt)
     dev.off()
-    return(BoxPlot_DBH_by_Plt)
+    
 }
