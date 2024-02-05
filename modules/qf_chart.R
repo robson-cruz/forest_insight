@@ -38,9 +38,7 @@ qf_chart <- function(df) {
                 )
         
         # Close the graphics device and assign the object to the environment
+        print(qf_plot)
         dev.off()
-        
-        assign('qf_plot', 'qf_plot', envir = .GlobalEnv)
-        return(qf_plot)
 }
 
