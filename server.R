@@ -14,6 +14,7 @@ source("./modules/qf_chart.R")
 source("./modules/eco_status_chart.R")
 source("./modules/dbh_by_ut_chart.R")
 source("./modules/criterion_10_15_percent.R")
+source("./modules/stat_by_ut.R")
 
 
 input_data_model <- read.csv2("./data/input_data.csv")
@@ -63,6 +64,7 @@ function(input, output, session) {
                 dbh_classes_generate(inventario)
                 drop_duplicated_rows(df)
                 scientific_name_clean(df)
+                stat_ut(df)
                 dbh_classes_chart(df)
                 dbh_over_ut(df)
                 qf_chart(df)
