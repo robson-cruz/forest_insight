@@ -7,6 +7,10 @@ shinyUI(
         lang = "pt-BR",
         #tags$head(includeScript("google-analytics.js"))
         tags$head(
+            tags$meta(charset = "UTF-8"),
+            tags$meta(name = "viewport", content = "width=device-width, initial-scale=1.0"),
+            tags$meta(name = "description", content = "Análise de inventário florestal para Plano de Manejo Florestal Sustentável"),
+            tags$meta(name = "keywords", content = "Inventário Florestal, Plano de manejo florestal, POA, PMFS"),
             tags$style(type = "text/css", includeCSS("./www/css/styles.css"))
                
         ),
@@ -50,12 +54,12 @@ shinyUI(
                    )
                ),
                conditionalPanel(
-                   condition = "input.plotType == 'dapUt'",
-                   plotOutput("BoxPlot_DBH_by_Plt")
-               ),
-               conditionalPanel(
                    condition = "input.plotType == 'dap'",
                    plotOutput("DBH_classes_plot")
+               ),
+               conditionalPanel(
+                   condition = "input.plotType == 'dapUt'",
+                   plotOutput("BoxPlot_DBH_by_Plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'areaBasalDap'",
@@ -79,7 +83,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'crit1015'",
-                   plotOutput("")
+                   plotOutput("crit_10.15_plt")
                )
            ),
            tabPanel(
@@ -91,7 +95,7 @@ shinyUI(
            ),
            tabPanel(
                "Baixar Análise Completa",
-               downloadLink('DownloadDataAnalysis', 'Download')
+               downloadLink(outputId = 'DownloadDataAnalysis', label = 'Download')
            )
        )
     )
