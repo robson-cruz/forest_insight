@@ -41,9 +41,8 @@ eco_status_chart <- function(df) {
             fill = 'Seleção'
         )
     
-    #print(status_cutting_plot)
-    
     # Close the graphics device and returns the plot
+    print(status_cutting_plot)
     dev.off()
-    return(status_cutting_plot)
+    
 }
