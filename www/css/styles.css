@@ -25,7 +25,7 @@
 }
 
 .btn.btn-default.shiny-download-link.shiny-bound-output {
-        background: orange;
+        background: #77b379;
         font-size: 28px;
 }
 
@@ -43,4 +43,12 @@
 img {
         width: 1280;
         height: 720;
+}
+
+#fileStatusInventario {
+        margin-top: 25px;
+}
+
+#fileStatusAem, #uploadAem-label, #uploadInventario-label, #fileStatusInventario {
+        font-size: 19px;
 }
