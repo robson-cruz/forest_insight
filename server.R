@@ -18,7 +18,8 @@ source("./modules/stat_by_ut.R")
 source("./modules/criterion_3_4_trees.R")
 
 
-input_data_model <- read.csv2("./data/input_data.csv")
+inventario_modelo <- read.csv2("./data/input_data.csv")
+aem_modelo <- read.csv2("./data/aem.csv")
 
 function(input, output, session) {
     observe({
@@ -145,13 +146,26 @@ function(input, output, session) {
         }
     )
     
-    # Download - Spreadsheet Model
-    output$DownloadDataModel <- downloadHandler(
+    # Download - Spreadsheet Models
+    output$Download_inventario_Modelo <- downloadHandler(
         filename = function() {
-            paste('Planilha_Modelo_ForestInsight', '.csv', sep = '')
+            paste('Planilha_Modelo_Inventario', '.csv', sep = '')
         },
         content = function(file) {
-            write.csv2(input_data_model,
+            write.csv2(inventario_modelo,
+                       file,
+                       row.names = FALSE,
+                       fileEncoding = 'latin1')
+            
+        }
+    )
+    
+    output$Download_Aem_modelo <- downloadHandler(
+        filename = function() {
+            paste('Planilha_Modelo_Areas_Efetivo_Manejo', '.csv', sep = '')
+        },
+        content = function(file) {
+            write.csv2(aem_modelo,
                        file,
                        row.names = FALSE,
                        fileEncoding = 'latin1')
