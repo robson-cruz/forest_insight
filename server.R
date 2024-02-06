@@ -15,6 +15,7 @@ source("./modules/eco_status_chart.R")
 source("./modules/dbh_by_ut_chart.R")
 source("./modules/criterion_10_15_percent.R")
 source("./modules/stat_by_ut.R")
+source("./modules/criterion_3_4_trees.R")
 
 
 input_data_model <- read.csv2("./data/input_data.csv")
@@ -64,13 +65,14 @@ function(input, output, session) {
                 dbh_classes_generate(inventario)
                 drop_duplicated_rows(df)
                 scientific_name_clean(df)
+                crit_34(df)
                 stat_ut(df)
                 dbh_classes_chart(df)
                 dbh_over_ut(df)
                 qf_chart(df)
                 eco_status_chart(df)
                 criterion_1015(df)
-                "Dados Processados com Sucesso.Veja Análise"
+                "Dados Processados com Sucesso. Veja Análise"
                 
             } else {
                 "Por favor, carregue um arquivo válido antes de prosseguir."
