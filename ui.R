@@ -27,10 +27,14 @@ shinyUI(
            textOutput("fileStatusInventario")
        ),
        navbarMenu(
-           "Planilha Modelo",
+           "Planilhas Modelo",
            tabPanel(
-               "Planilha Modelo", 
-               downloadButton(outputId = "DownloadDataModel", label = "Baixar Análise")
+               "Baixar Inventário Modelo", 
+               downloadButton(outputId = "Download_inventario_Modelo", label = "Planilha Modelo - Inventário"),
+           ),
+           tabPanel(
+               "Baixar Modelo de Áreas Efetivo Manejo",
+               downloadButton(outputId = "Download_Aem_modelo", label = "Planilha Modelo - Área de Efetivo manejo")
            )
        ),
        navbarMenu(
