@@ -26,6 +26,7 @@ shinyUI(
            actionButton(inputId = "uploadFileInventario", "Fazer upload e Rodar Análise"),
            textOutput("fileStatusInventario")
        ),
+       uiOutput("progressOutput"),
        navbarMenu(
            "Planilhas Modelo",
            tabPanel(
@@ -99,7 +100,7 @@ shinyUI(
            ),
            tabPanel(
                "Baixar Análise Completa",
-               downloadLink(outputId = 'DownloadDataAnalysis', label = 'Download')
+               downloadButton(outputId = 'DownloadDataAnalysis', label = 'Download')
            )
        )
     )
