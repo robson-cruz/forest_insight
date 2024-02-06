@@ -83,10 +83,10 @@ function(input, output, session) {
     
     # Data frame
     output$verDados <- DT::renderDataTable({
-        DT::datatable(df[,],
+        DT::datatable(df,
+                      rownames = FALSE,
                       options = list(
                           pageLength = 6,
-                          rownames = FALSE,
                           language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese.json')
                       ))
     })
