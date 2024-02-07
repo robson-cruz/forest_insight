@@ -15,6 +15,8 @@ source("./modules/dbh_by_ut_chart.R")
 source("./modules/criterion_10_15_percent.R")
 source("./modules/stat_by_ut.R")
 source("./modules/criterion_3_4_trees.R")
+source("./modules/autex.R")
+
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
 aem_modelo <- read.csv2("./data/aem.csv")
@@ -43,14 +45,13 @@ process_data <- function() {
             dbh_classes_chart(df)
             dbh_over_ut(df)
             qf_chart(df)
+            eco_status_chart(df)
             
             incProgress(0.2, detail = 'Etapa 5 de 10')
-            eco_status_chart(df)
             criterion_1015(df)
+            autex_generate(df)
             
             
-            
-            # More processing steps...
             
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
