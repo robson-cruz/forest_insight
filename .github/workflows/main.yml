@@ -2,7 +2,7 @@ name: Close Issue on Commit
 
 on:
   issues:
-    state: open
+    state: [open]
 
 permissions:
   issues: write
@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+      - name: Close Issue
+        uses: rcDeveloping/close-issue@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
@@ -37,19 +37,12 @@ jobs:
               echo "Número de issue vazio. Ignorando."
               continue
             fi
-            # Tenta fechar a issue
-            RESPONSE=$(curl -L \
-              -X PUT \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer $API_TOKEN" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock \
-              -d '{"lock_reason":"resolved"}')
-              
-            # Verifica o código de resposta
-            if [ "$RESPONSE" -eq "204" ]; then
-              echo "Issue #$ISSUE_NUMBER fechada com sucesso."
-            else
-              echo "Falha ao fechar a issue #$ISSUE_NUMBER. Código de resposta: $RESPONSE"
-            fi
+            # Fechar issues
+              curl -L \
+                -X PUT \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer $API_TOKEN" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock \
+                -d '{"lock_reason":"resolved"}'
           done
