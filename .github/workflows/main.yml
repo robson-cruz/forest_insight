@@ -1,0 +1,38 @@
+name: Close Issue on Commit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  close-issue-on-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up API token
+        env:
+          API_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: echo "Setting up API token" && echo $API_TOKEN
+        
+      - name: Close Issue
+        id: close_issue
+        run: |
+          # Gets the list of commit messages
+          COMMIT_MESSAGES=$(git log --pretty=%B -n 1 ${{ github.sha }})
+          # Search for issue numbers in the commit message
+          ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+')
+          # Closes issues found in commits
+          for ISSUE_NUMBER in $ISSUE_NUMBERS; do
+            echo "Fechando issue #$ISSUE_NUMBER"
+            curl -L -X PUT \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+              -d "{\"lock_reason\": \"off-topic\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock"
+          done
