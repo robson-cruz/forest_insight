@@ -17,10 +17,6 @@ jobs:
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: Set up API token
-        env:
-          API_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
       - name: Close Issue
         id: close_issue
         run: |
