@@ -24,6 +24,6 @@ jobs:
         id: close_issue
         run: |
           # Gets the list of commit messages
-          COMMIT_MESSAGES=$(git log --pretty=%B ${{ github.sha }})
+          COMMIT_MESSAGES=$(git log --pretty=%B)
           echo $COMMIT_MESSAGES
           
