@@ -19,7 +19,7 @@ jobs:
         env:
           API_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: echo "Setting up API token"
-        
+
       - name: Close Issue
         id: close_issue
         run: |
@@ -30,9 +30,21 @@ jobs:
           # Closes issues found in commits
           for ISSUE_NUMBER in $ISSUE_NUMBERS; do
             echo "Fechando issue #$ISSUE_NUMBER"
-            curl -L -X PUT \
+            # Verifica se o número da issue está vazio
+            if [ -z "$ISSUE_NUMBER" ]; then
+              echo "Número de issue vazio. Ignorando."
+              continue
+            fi
+            # Tenta fechar a issue
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
-              -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+              -H "Authorization: Bearer $API_TOKEN" \
               -d "{\"lock_reason\": \"off-topic\"}" \
-              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock"
-          
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock")
+            # Verifica o código de resposta
+            if [ "$RESPONSE" -eq "204" ]; then
+              echo "Issue #$ISSUE_NUMBER fechada com sucesso."
+            else
+              echo "Falha ao fechar a issue #$ISSUE_NUMBER. Código de resposta: $RESPONSE"
+            fi
+          done
