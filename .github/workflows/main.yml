@@ -3,16 +3,16 @@ name: Close Issue on Commit
 on:
   issues:
     types: [opened]
-
-permissions:
-  issues: write
   
 jobs:
   close-issues:
     runs-on: ubuntu-latest
-  
+    
+    permissions:
+      issues: write
+    
     steps:
-      - name: Close Issue
+      - name: User and Token
         uses: rcDeveloping/close-issue@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
