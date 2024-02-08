@@ -14,6 +14,7 @@
 #' 
 #' @import ggplot2
 #' @import dplyr
+#' @import tools
 #' 
 library(dplyr, warn.conflicts = FALSE)
 library(ggplot2)
@@ -24,21 +25,27 @@ stat_ut <- function(df) {
     group_by(ut) %>%
     summarize(
         n = n(),
+        dap_min = min(dap),
+        dap_max = max(dap),
         dap_media = mean(dap),
-        dap_mediana = median(dap),
         dap_sd = sd(dap),
+        g_min = min(g),
+        g_max = max(g),
         g_media = mean(g),
-        g_mediana = median(g),
         g_desvio_padrao = sd(g),
         g_total = sum(g),
+        altura_min = min(altura),
+        altura_max = max(altura),
         altura_media = mean(altura),
-        altura_mediana = median(altura),
         altura_desvio_padrao = sd(altura),
+        Volume_min = min(vol_geo),
+        Volume_max = max(vol_geo),
         Volume_medio = mean(vol_geo),
-        Vol_mediana = median(vol_geo),
         Volume_desvio_padrao = sd(vol_geo)
     ) %>%
-    arrange(ut)
+        rename_with(~ tools::toTitleCase((gsub("_", " ", .x, fixed = TRUE)))) %>%
+        rename(ut = Ut) %>%
+        arrange(ut)
     
     output_dir <- './output/Planilhas/'
     if (!dir.exists(output_dir)) {
