@@ -25,5 +25,14 @@ jobs:
         run: |
           # Gets the list of commit messages
           COMMIT_MESSAGES=$(git log --pretty=%B)
-          echo $COMMIT_MESSAGES
+          # Search for issue numbers in the commit message
+          ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+')
+          # Closes issues found in commits
+          for ISSUE_NUMBER in $ISSUE_NUMBERS; do
+            echo "Fechando issue #$ISSUE_NUMBER"
+            curl -L -X PUT \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
+              -d "{\"lock_reason\": \"off-topic\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock"
           
