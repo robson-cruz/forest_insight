@@ -2,7 +2,7 @@ name: Close Issue on Commit
 
 on:
   issues:
-    types: [created]
+    state: open
 
 permissions:
   issues: write
@@ -28,7 +28,7 @@ jobs:
           # Gets the list of commit messages
           COMMIT_MESSAGES=$(git log --pretty=%B)
           # Search for issue numbers in the commit message
-          ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+' | sed 's/#//g')
+          ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+')
           # Closes issues found in commits
           for ISSUE_NUMBER in $ISSUE_NUMBERS; do
             echo "Fechando issue #$ISSUE_NUMBER"
