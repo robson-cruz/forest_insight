@@ -33,6 +33,6 @@ jobs:
             curl -L -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
-              https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock \
-              -d `{"lock_reason": "off-topic"}`
+              -d "{\"lock_reason\": \"off-topic\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock"
           done
