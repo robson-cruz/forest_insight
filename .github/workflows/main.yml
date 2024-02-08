@@ -25,7 +25,7 @@ jobs:
           # Closes issues found in commits
           for ISSUE_NUMBER in $ISSUE_NUMBERS; do
             echo "Fechando issue #$ISSUE_NUMBER"
-            curl -X POST \
+            curl -i -X POST \
               -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/close
