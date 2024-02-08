@@ -30,7 +30,7 @@ jobs:
           # Closes issues found in commits
           for ISSUE_NUMBER in $ISSUE_NUMBERS; do
             echo "Fechando issue #$ISSUE_NUMBER"
-            curl -L -X OUT \
+            curl -L -X PUT \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
               https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock\
