@@ -24,7 +24,7 @@ jobs:
         id: close_issue
         run: |
           # Gets the list of commit messages
-          COMMIT_MESSAGES=$(git log --pretty=%B -n 1 ${{ github.sha }})
+          COMMIT_MESSAGES=$(git log --pretty=%B)
           # Search for issue numbers in the commit message
           ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+')
           # Closes issues found in commits
