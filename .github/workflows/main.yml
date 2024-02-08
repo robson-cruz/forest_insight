@@ -2,7 +2,7 @@ name: Close Issue on Commit
 
 on:
   issues:
-    state: [open]
+    types: [open]
 
 permissions:
   issues: write
