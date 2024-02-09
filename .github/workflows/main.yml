@@ -14,6 +14,8 @@ jobs:
         uses: rcDeveloping/close-issue@v3
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
+          issue-close-message: "@${issue.user.login}: hello! :wave:\n\nThis issue is being automatically closed because it was solved."
+          closed-issues-label: "✔️"
 
       - name: Close Issue
         id: close_issue
