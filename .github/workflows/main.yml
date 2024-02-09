@@ -1,8 +1,6 @@
 name: Close Issue on Commit
 
-on:
-  issues:
-    types: [opened]
+on: issues
   
 jobs:
   close-issues:
