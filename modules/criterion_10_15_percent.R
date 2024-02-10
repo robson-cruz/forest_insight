@@ -26,11 +26,11 @@ library(ggplot2)
 criterion_1015 <- function(data_frame) {
     crit_10.15 <- data_frame %>%
         filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
-        select(nome_cientifico, categoria2, status, aem) %>%
+        select(nome_cientifico, categoria, status, aem) %>%
         group_by(nome_cientifico) %>%
         mutate(
-            Corte = sum(categoria2 == 'Explorar'),
-            Remanescente = sum(categoria2 == 'Remanescente'),
+            Corte = sum(categoria == 'Explorar'),
+            Remanescente = sum(categoria == 'Remanescente'),
             Total = Corte + Remanescente,
             PercRem = round(Remanescente / Total * 100),
         ) %>%
@@ -42,16 +42,21 @@ criterion_1015 <- function(data_frame) {
         # By default, mutate() keeps all columns from the input data
         # Use '.keep_all' to override it
         distinct(nome_cientifico, .keep_all = TRUE) %>%
-        select(-c(aem, categoria2)) %>%
+        select(-c(aem, categoria)) %>%
         filter(Corte != 0) %>%
         arrange(nome_cientifico)
     
-    output_dir <- './output/Planilhas/'
-    if (!dir.exists(output_dir)) {
-        dir.create(output_dir, recursive = TRUE)
+    output_dir_spreadsheet <- './output/Planilhas/'
+    if (!dir.exists(output_dir_spreadsheet)) {
+        dir.create(output_dir_spreadsheet, recursive = TRUE)
     }
     
-    file_name_crit1015 <- paste0(output_dir, 'Criterio_10-15_Porcento', '.csv')
+    output_dir_not <- './output/Pendencias/'
+    if (!dir.exists(output_dir_not)) {
+        dir.create(output_dir_not, recursive = TRUE)
+    }
+    
+    file_name_crit1015 <- paste0(output_dir_spreadsheet, 'Criterio_10-15_Porcento', '.csv')
     
     file_name_crit1015_not <- paste0('./output/Pendencias/',
                                      'Criterio_10-15_Porcento',
@@ -79,13 +84,13 @@ criterion_1015 <- function(data_frame) {
     
     
     # Lollipop Chart
-    output_dir <- './output/Graficos/Criterio_10_a_15_Porcento/'
-    if (!dir.exists(output_dir)) {
-        dir.create(output_dir, recursive = TRUE)
+    output_dir_plt <- './output/Graficos/Criterio_10_a_15_Porcento/'
+    if (!dir.exists(output_dir_plt)) {
+        dir.create(output_dir_plt, recursive = TRUE)
     }
     
     png(
-        paste0(output_dir, 'Criterio_10_a_15_Porcento', '.png'),
+        paste0(output_dir_plt, 'Criterio_10_a_15_Porcento', '.png'),
         width = 1500,
         height = 1500,
         res = 300
@@ -97,29 +102,37 @@ criterion_1015 <- function(data_frame) {
             nome_cientifico = ifelse(!status == 'Não Ameaçada',
                                      paste(nome_cientifico, '*'),
                                      nome_cientifico)
-        ) %>%
-        mutate(nome_cientifico = factor(nome_cientifico, nome_cientifico)) %>%
-        mutate(nome_cientifico = forcats::fct_reorder(nome_cientifico, Criterio))
+        )
     
     crit_10.15_plt <- ggplot(data2plt, aes(x = nome_cientifico, y = Criterio)) +
         
         geom_segment(
             aes(x = nome_cientifico, xend = nome_cientifico, y = Criterio, yend = PercRem),
-            color = 'steelblue', size = 0.3
+            color = '#aeb6bf',
+            linewidth = 0.6
         ) +
         
-        geom_point(aes(x = nome_cientifico, y = Criterio),
-                   color = '#597E52',
-                   size = 1,
+        geom_point(aes(x = nome_cientifico, y = Criterio,
+                       color = "Critério 10% a 15%",
+                       fill = "Critério 10% a 15%"),
+                   size = 1.5,
                    shape = 21,
-                   fill = '#597E52') +
+                   ) +
         
-        geom_point(aes(x = nome_cientifico, y = PercRem),
-                   color = '#5D3587',
-                   size = 1,
-                   shape = 21,
-                   fill = '#5D3587') +
+        geom_point(aes(x = nome_cientifico, y = PercRem,
+                       color = "Percentual Remanescente",
+                       fill = "Percentual Remanescente"),
+                   size = 1.5,
+                   shape = 21) +
+
+        scale_color_manual(name = "",
+                           values = c("Critério 10% a 15%" = "#3EC70B",
+                                      "Percentual Remanescente" = "#5D3587")) +
         
+        scale_fill_manual(name = "",
+                          values = c("Critério 10% a 15%" = "#3EC70B",
+                                     "Percentual Remanescente" = "#5D3587")) +
+    
         geom_text(
             aes(x = nome_cientifico, y = PercRem, label = paste0(PercRem, '%')),
             color = '#5D3587',
@@ -130,30 +143,37 @@ criterion_1015 <- function(data_frame) {
         
         coord_flip() +
         
-        scale_y_continuous(breaks =  seq(10, 100, 5), labels = scales::label_percent(scale = 1)) +
+        scale_y_continuous(breaks =  seq(10, 100, 10),
+                           labels = scales::label_percent(scale = 1)) +
+        
+        annotate(
+            geom = "rect",
+            xmin = 1,
+            xmax = nrow(data2plt),
+            ymin = min(data2plt$Criterio),
+            ymax = max(data2plt$Criterio),
+            alpha = 0.25,
+            fill = '#393E46'
+        ) +
         
         # annotate(
-        #     geom = "rect",
-        #     aes(data2plt),
-        #     ymin = ,
-        #     ymax = ,
-        #     xmin = ,
-        #     xmax = ,
-        #     alpha = 0.2, color = "blue", fill = "blue"
+        #     "text",
+        #     x = Inf, y = -Inf,
+        #     hjust = 0, vjust = 0,
+        #     label = ifelse(nrow(not) > 0, "Não Atende", "Atende"),
+        #     color = ifelse(nrow(not) > 0, "red", "black")
         # ) +
         
         labs(
             x = NULL,
             y = NULL,
             title = 'Percentual de Árvores Remanescentes',
-            caption = '* Espécie Vulnerável',
-            color = 'Análise: '
+            caption = '* Espécie Vulnerável'
         ) +
         
         theme(
             plot.title = element_text(size = 10, hjust = 0.5),
-            #panel.background = element_rect(fill = '#f7f7f7'),
-            panel.background = element_blank(),
+            panel.background = element_rect(fill = "#FFFFFF", color = "#FFFFFF"),
             #panel.grid.minor = element_blank(),
             #panel.grid.major.y = element_blank(),
             #panel.grid.major.x = element_blank(),
@@ -163,12 +183,15 @@ criterion_1015 <- function(data_frame) {
             axis.ticks.y = element_blank(),
             axis.ticks.x = element_blank(),
             axis.text.x = element_text(size = 5),
-            axis.text.y = element_text(size = 6, face = 'italic'),
+            axis.text.y = element_text(size = 6,
+                                       face = 'italic',
+                                       color = ifelse(data2plt$Análise == "Nao Atende",
+                                                      "red", "black")),
             plot.caption = element_text(size = 6, face = 'italic'),
             legend.position = 'bottom',
             legend.title = element_text(size = 7),
             legend.text = element_text(size = 7),
-            legend.background = element_rect(color = '#f7f7f7'),
+            #legend.background = element_rect(color = '#0F1035'),
             legend.key = element_blank()
         )
     
