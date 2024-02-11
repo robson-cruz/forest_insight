@@ -1,9 +1,11 @@
 name: Close Issue on Commit
 
-on: issues
+on:
+  schedule:
+    - cron: '0 */4 * * *'
   
 jobs:
-  close-issues:
+  lock:
     runs-on: ubuntu-latest
     
     permissions:
@@ -11,10 +13,10 @@ jobs:
     
     steps:
       - name: User and Token
-        uses: rcDeveloping/close-issue@v3
+        uses: dessant/lock-threads@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          issue-close-message: "@${issue.user.login}: hello! :wave:\n\nThis issue is being automatically closed because it was solved."
+          issue-lock-comment: "@${issue.user.login}: hello! :wave:\n\nThis issue is being automatically closed because it was solved."
           closed-issues-label: "✔️"
 
       - name: Close Issue
