@@ -13,7 +13,7 @@ jobs:
     
     steps:
       - name: User and Token
-        uses: dessant/lock-threads@v2
+        uses: peter-evans/close-issue@v1
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           issue-lock-comment: "hello! :wave:\n\nThis issue is being automatically closed because it was solved."
