@@ -20,8 +20,8 @@ autex_generate <- function(df) {
         select(nome_cientifico, nome_popular, status, categoria, vol_geo) %>%
         filter(categoria == "Explorar") %>%
         group_by(nome_cientifico) %>%
-        mutate(numero_árvore = sum(categoria == "Explorar"),
-               vol_autorizado = sum(vol_geo)) %>%
+        mutate(numero_árvores = sum(categoria == "Explorar"),
+               volume_autorizado = sum(vol_geo)) %>%
         group_by(nome_cientifico, categoria) %>%
         ungroup() %>%
         # By default, mutate() keeps all columns from the input data
