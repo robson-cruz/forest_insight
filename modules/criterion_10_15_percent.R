@@ -1,4 +1,4 @@
-#' @name criterion_1015
+ling#' @name criterion_1015
 #' 
 #' @title criterion 10% to 15% of trees by species
 #' 
@@ -32,7 +32,7 @@ criterion_1015 <- function(data_frame) {
             Corte = sum(categoria == 'Explorar'),
             Remanescente = sum(categoria == 'Remanescente'),
             Total = Corte + Remanescente,
-            PercRem = round(Remanescente / Total * 100),
+            PercRem = ceiling(Remanescente / Total * 100)
         ) %>%
         mutate(
             Criterio = if_else(status == 'Não Ameaçada', 10, 15),
