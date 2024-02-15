@@ -1,4 +1,4 @@
-ling#' @name criterion_1015
+#' @name criterion_1015
 #' 
 #' @title criterion 10% to 15% of trees by species
 #' 
