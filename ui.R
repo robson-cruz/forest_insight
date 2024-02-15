@@ -68,7 +68,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'areaBasalDap'",
-                   plotOutput("")
+                   plotOutput("basal_area_DBH_plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'areaBasalUt'",
