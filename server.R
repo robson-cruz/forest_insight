@@ -16,6 +16,7 @@ source("./modules/qf_chart.R")
 source("./modules/eco_status_chart.R")
 source("./modules/criterion_10_15_percent.R")
 source("./modules/autex.R")
+source("./modules/basal_area_by_dbh_chart.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -51,7 +52,8 @@ process_data <- function() {
             criterion_1015(df)
             autex_generate(df)
             
-            
+            incProgress(0.2, detail = 'Etapa 6 de 10')
+            basal_area_by_DBH(df)
             
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
@@ -162,6 +164,12 @@ function(input, output, session) {
     output$crit_10.15_plt <- renderImage({
         criterion_1015(df)
         list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
+             contentType = 'image/png')
+    })
+    
+    output$basal_area_DBH_plt <- renderImage({
+        basal_area_by_DBH(df)
+        list(src = './output/Graficos/Area_Basal/Area_Basal_dap.png',
              contentType = 'image/png')
     })
     
