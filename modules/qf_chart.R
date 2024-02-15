@@ -6,6 +6,8 @@
 #'
 #' @import ggplot2
 #'
+#' @import forcats
+#'
 #' @return a ggplot object
 #' 
 qf_chart <- function(df) {
@@ -16,7 +18,7 @@ qf_chart <- function(df) {
                 res = 300
         )
         
-        qf_plot <- ggplot(df, aes(qf, fill = categoria2)) +
+        qf_plot <- ggplot(df, aes(forcats::fct_reorder(qf, categoria2), fill = categoria2)) +
                 geom_bar(
                         position = position_dodge2(preserve = 'total'),
                         alpha = 0.75,
