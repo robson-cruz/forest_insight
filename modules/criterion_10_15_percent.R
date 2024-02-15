@@ -24,7 +24,7 @@ library(ggplot2)
 
 
 criterion_1015 <- function(data_frame) {
-    crit_10.15 <- a %>%
+    crit_10.15 <- df %>%
         filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
         select(nome_cientifico, categoria2, status, aem) %>%
         group_by(nome_cientifico) %>%
