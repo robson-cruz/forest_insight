@@ -24,13 +24,14 @@ library(ggplot2)
 
 
 criterion_1015 <- function(data_frame) {
-    crit_10.15 <- data_frame %>%
+    crit_10.15 <- a %>%
         filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
-        select(nome_cientifico, categoria, status, aem) %>%
+        select(nome_cientifico, categoria2, status, aem) %>%
         group_by(nome_cientifico) %>%
+        # mutate(categoria2 = as.numeric(as.factor(categoria2))) %>%
         mutate(
-            Corte = sum(categoria == 'Explorar'),
-            Remanescente = sum(categoria == 'Remanescente'),
+            Corte = sum(categoria2 == 'Explorar'),
+            Remanescente = sum(categoria2 == 'Remanescente'),
             Total = Corte + Remanescente,
             PercRem = ceiling(Remanescente / Total * 100)
         ) %>%
@@ -42,7 +43,7 @@ criterion_1015 <- function(data_frame) {
         # By default, mutate() keeps all columns from the input data
         # Use '.keep_all' to override it
         distinct(nome_cientifico, .keep_all = TRUE) %>%
-        select(-c(aem, categoria)) %>%
+        select(-c(aem, categoria2)) %>%
         filter(Corte != 0) %>%
         arrange(nome_cientifico)
     
@@ -117,14 +118,14 @@ criterion_1015 <- function(data_frame) {
                        fill = "Critério 10% a 15%"),
                    size = 1.5,
                    shape = 21,
-                   ) +
+        ) +
         
         geom_point(aes(x = nome_cientifico, y = PercRem,
                        color = "Percentual Remanescente",
                        fill = "Percentual Remanescente"),
                    size = 1.5,
                    shape = 21) +
-
+        
         scale_color_manual(name = "",
                            values = c("Critério 10% a 15%" = "#3EC70B",
                                       "Percentual Remanescente" = "#5D3587")) +
@@ -132,7 +133,7 @@ criterion_1015 <- function(data_frame) {
         scale_fill_manual(name = "",
                           values = c("Critério 10% a 15%" = "#3EC70B",
                                      "Percentual Remanescente" = "#5D3587")) +
-    
+        
         geom_text(
             aes(x = nome_cientifico, y = PercRem, label = paste0(PercRem, '%')),
             color = '#5D3587',
