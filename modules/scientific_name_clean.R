@@ -111,9 +111,9 @@ scientific_name_clean <- function(dataframe) {
                                          'Não Ameaçada',
                                          status_conservacao)
         ) %>%
-        # Set status column as a factor
+        # Set status_conservacao column as a factor
         mutate(
-            status = factor(status_conservacao,
+            status_conservacao = factor(status_conservacao,
                             levels = c('Não Ameaçada', 'Vulnerável', 'Em Perigo'))
         ) %>%
         select(-c(id))
