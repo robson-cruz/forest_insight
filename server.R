@@ -5,8 +5,8 @@ library(ggplot2)
 # Source script
 source("global.R")
 # Source Functions
-source("./modules/dbh_classes_generate.R")
 source("./modules/drop_duplicated_rows.R")
+source("./modules/dbh_classes_generate.R")
 source("./modules/scientific_name_clean.R")
 source("./modules/criterion_3_4_trees.R")
 source("./modules/stat_by_ut.R")
@@ -17,6 +17,7 @@ source("./modules/eco_status_chart.R")
 source("./modules/criterion_10_15_percent.R")
 source("./modules/autex.R")
 source("./modules/basal_area_by_dbh_chart.R")
+source("./modules/basal_area_by_ut_chart.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -31,32 +32,38 @@ process_data <- function() {
             # Update the value parameter to indicate progress (0 to 10)
             incProgress(0.2, detail = 'Etapa 1 de 10')
             # Perform data processing steps here
-            inventario %<>% left_join(aem, by = 'ut')
+            usr_data %<>%
+                left_join(aem, by = 'ut')
+
+            drop_duplicated_rows(usr_data)
             dbh_classes_generate(dataframe)
-            drop_duplicated_rows(dataframe)
 
             incProgress(0.1, detail = 'Etapa 2 de 10')
-            scientific_name_clean(df)
+            scientific_name_clean(dataframe)
 
             incProgress(0.2, detail = 'Etapa 3 de 10')
-            crit_34(df)
-            stat_ut(df)
+            crit_34(dataframe)
+            stat_ut(dataframe)
 
             incProgress(0.2, detail = 'Etapa 4 de 10')
-            dbh_classes_chart(df)
-            dbh_over_ut(df)
-            qf_chart(df)
-            eco_status_chart(df)
+            dbh_classes_chart(dataframe)
+            dbh_over_ut(dataframe)
+            qf_chart(dataframe)
+            eco_status_chart(dataframe)
 
             incProgress(0.2, detail = 'Etapa 5 de 10')
-            criterion_1015(df)
-            autex_generate(df)
+            criterion_1015(dataframe)
+            autex_generate(dataframe)
 
             incProgress(0.2, detail = 'Etapa 6 de 10')
-            basal_area_by_DBH(df)
+            basal_area_by_DBH(dataframe)
+
+            incProgress(0.2, detail = 'Etapa 7 de 10')
+            basal_area_ut(dataframe)
 
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
+
         }
     )
     # Return a message indicating the process is done
@@ -105,7 +112,7 @@ function(input, output, session) {
 
     observeEvent(input$uploadFileInventario, {
         output$fileStatusInventario <- renderText({
-            if (!is.null(inventario)) {
+            if (!is.null(usr_data)) {
                 # Call the function for processing data with progress indicator
                 process_message <- process_data()
                 return(process_message)
@@ -124,7 +131,7 @@ function(input, output, session) {
 
     # Data frame
     output$verDados <- DT::renderDataTable({
-        DT::datatable(df,
+        DT::datatable(dataframe,
                       rownames = FALSE,
                       options = list(
                           pageLength = 6,
@@ -133,46 +140,60 @@ function(input, output, session) {
     })
 
     output$summary <- renderPrint({
-        summary(df[, c("dap", "altura", "qf", "g", "vol_geo", "categoria2")])
+        summary(dataframe[, c("dap", "altura", "qf", "g", "vol_geo", "categoria2")])
     })
 
+    # Plots
     output$DBH_classes_plot <- renderImage({
-        dbh_classes_chart(df)
+        dbh_classes_chart(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap.png',
              contentType = 'image/png')
 
     }, deleteFile = FALSE)
 
-    output$BoxPlot_DBH_by_Plt <- renderImage({
-        dbh_over_ut(df)
+    output$BoxPlot_DBH_by_ut_Plt <- renderImage({
+        dbh_over_ut(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap_UT.png',
              contentType = 'image/png')
-    })
-
-    output$qf_plot <- renderImage({
-        qf_chart(df)
-        list(src = './output/Graficos/Qualidade_de_Fuste/Qualidade_de_Fuste.png',
-             contentType = 'image/png')
-    })
-
-    output$status_cutting_plot <- renderImage({
-        eco_status_chart(df)
-        list(src = './output/Graficos/Selecao_Corte/Selecao_Status_Ecologico.png',
-             contentType = 'image/png')
-    })
-
-    output$crit_10.15_plt <- renderImage({
-        criterion_1015(df)
-        list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
-             contentType = 'image/png')
-    })
+    }, deleteFile = FALSE)
 
     output$basal_area_DBH_plt <- renderImage({
-        basal_area_by_DBH(df)
+        basal_area_by_DBH(dataframe)
         list(src = './output/Graficos/Area_Basal/Area_Basal_dap.png',
              contentType = 'image/png')
-    })
+    }, deleteFile = FALSE)
 
+    output$basal_area_ut_plt <- renderImage({
+        basal_area_ut(dataframe)
+        list(src = './output/Graficos/Area_Basal/Area_Basal_ut.png',
+             contentType = 'image/png')
+    }, deleteFile = FALSE)
+
+    # output$cutting_plt <- renderImage({
+    #     basal_area_ut(dataframe)
+    #     list(src = './output/Graficos/Selecao_Corte/Selecao_dap.png',
+    #          contentType = 'image/png')
+    # }, deleteFile = FALSE)
+
+    output$qf_plot <- renderImage({
+        qf_chart(dataframe)
+        list(src = './output/Graficos/Qualidade_de_Fuste/Qualidade_de_Fuste.png',
+             contentType = 'image/png')
+    }, deleteFile = FALSE)
+
+    output$status_cutting_plot <- renderImage({
+        eco_status_chart(dataframe)
+        list(src = './output/Graficos/Selecao_Corte/Selecao_Status_Ecologico.png',
+             contentType = 'image/png')
+    }, deleteFile = FALSE)
+
+    output$crit_10.15_plt <- renderImage({
+        criterion_1015(dataframe)
+        list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
+             contentType = 'image/png')
+    }, deleteFile = FALSE)
+
+    # Prepare data to save
     output$DownloadDataAnalysis <- downloadHandler(
         filename = function() {
             paste('Dados_Processados_', Sys.Date(), '.zip', sep = '')
@@ -180,7 +201,7 @@ function(input, output, session) {
         content = function(file) {
             df_file <- file.path("./output", 'Inventario_Processado.csv')
 
-            write.csv2(df, df_file,
+            write.csv2(dataframe, df_file,
                        row.names = FALSE,
                        fileEncoding = 'latin1')
 
