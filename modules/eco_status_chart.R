@@ -26,7 +26,9 @@ eco_status_chart <- function(dataframe) {
         res = 300
     )
 
-    status_cutting_plot <- ggplot(data = dataframe, aes(status, fill = as.character(categoria2))) +
+    status_cutting_plot <- ggplot(data = dataframe,
+                                  aes(status_conservacao,
+                                      fill = as.character(categoria2))) +
         geom_bar(
             position = position_dodge2(preserve = 'single'),
             stat = "count",
