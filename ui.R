@@ -76,7 +76,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'dapCorte'",
-                   plotOutput("")
+                   plotOutput("harvest_dbh_plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'qf'",
