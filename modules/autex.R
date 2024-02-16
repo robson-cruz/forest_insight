@@ -17,12 +17,12 @@ library(dplyr)
 
 autex_generate <- function(dataframe) {
     autex <- dataframe %>%
-        select(nome_cientifico, nome_popular, status, categoria, vol_geo) %>%
-        filter(categoria == "Explorar") %>%
+        select(nome_cientifico, nome_popular, status_conservacao, categoria2, vol_geo) %>%
+        filter(categoria2 == "Explorar") %>%
         group_by(nome_cientifico) %>%
-        mutate(numero_árvores = sum(categoria == "Explorar"),
+        mutate(numero_árvores = sum(categoria2 == "Explorar"),
                volume_autorizado = sum(vol_geo)) %>%
-        group_by(nome_cientifico, categoria) %>%
+        group_by(nome_cientifico, categoria2) %>%
         ungroup() %>%
         # By default, mutate() keeps all columns from the input data
         # Use '.keep_all' to override it
