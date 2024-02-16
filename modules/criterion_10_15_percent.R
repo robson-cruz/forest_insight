@@ -9,7 +9,7 @@
 #' 10% to 15 % of remaining trees by species in the annual production area.
 #'
 #' @param dataframe - Forest inventory data frame with columns `nome_cientifico`,
-#' `categoria2`, `status` and `aem`.
+#' `categoria2`, `status_conservacao` and `aem`.
 #'
 #' @return A ggplot object and a dataframe with the percentage of remaining trees
 #' by species and whether or not they meet the maintenance criterion from 10% to
@@ -26,7 +26,7 @@ library(ggplot2)
 criterion_1015 <- function(dataframe) {
     crit_10.15 <- dataframe %>%
         filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
-        select(nome_cientifico, categoria2, status, aem) %>%
+        select(nome_cientifico, categoria2, status_conservacao, aem) %>%
         group_by(nome_cientifico) %>%
         # mutate(categoria2 = as.numeric(as.factor(categoria2))) %>%
         mutate(
@@ -36,7 +36,7 @@ criterion_1015 <- function(dataframe) {
             PercRem = ceiling(Remanescente / Total * 100)
         ) %>%
         mutate(
-            Criterio = if_else(status == 'Não Ameaçada', 10, 15),
+            Criterio = if_else(status_conservacao == 'Não Ameaçada', 10, 15),
             Analise = if_else(PercRem >= Criterio |
                                   Corte == 0, 'Atende', 'Nao Atende')
         ) %>%
@@ -101,7 +101,7 @@ criterion_1015 <- function(dataframe) {
     data2plt <- crit_10.15 %>%
         rename(Análise = Analise) %>%
         mutate(
-            nome_cientifico = ifelse(!status == 'Não Ameaçada',
+            nome_cientifico = ifelse(!status_conservacao == 'Não Ameaçada',
                                      paste(nome_cientifico, '*'),
                                      nome_cientifico)
         )

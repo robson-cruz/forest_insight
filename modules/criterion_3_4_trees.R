@@ -22,7 +22,7 @@ library(dplyr, warn.conflicts = FALSE)
 crit_34 <- function(dataframe) {
     crit_3.4 <- dataframe %>%
         filter(dap >= 50 & as.numeric(as.character(qf)) <= 2) %>%
-        select(ut, nome_cientifico, categoria2, status, aem) %>%
+        select(ut, nome_cientifico, categoria2, status_conservacao, aem) %>%
         group_by(ut, nome_cientifico) %>%
         mutate(
             Corte = sum(categoria2 == 'Explorar'),
@@ -30,7 +30,7 @@ crit_34 <- function(dataframe) {
             Total = Corte + Remanescente
         ) %>%
         mutate(
-            Criterio = ifelse(status == 'Não Ameaçada',
+            Criterio = ifelse(status_conservacao == 'Não Ameaçada',
                               ceiling(3 * aem / 100),
                               ceiling(4 * aem / 100))
         ) %>%
@@ -41,7 +41,8 @@ crit_34 <- function(dataframe) {
         ) %>%
         distinct(nome_cientifico, .keep_all = TRUE) %>%
         select(-c(aem, categoria2)) %>%
-        select(ut, nome_cientifico, status, Total, Corte, Remanescente, Criterio, Analise) %>%
+        select(ut, nome_cientifico, status_conservacao, Total, Corte,
+               Remanescente, Criterio, Analise) %>%
         rename_with(~ tools::toTitleCase((gsub("_", " ", .x, fixed = TRUE)))) %>%
         rename(ut = Ut)
 
