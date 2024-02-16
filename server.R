@@ -18,6 +18,8 @@ source("./modules/criterion_10_15_percent.R")
 source("./modules/autex.R")
 source("./modules/basal_area_by_dbh_chart.R")
 source("./modules/basal_area_by_ut_chart.R")
+source("./modules/classify_species.R")
+source("./modules/harvest_by_dbh_chart.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -42,24 +44,26 @@ process_data <- function() {
             scientific_name_clean(dataframe)
 
             incProgress(0.2, detail = 'Etapa 3 de 10')
+            classify_species(dataframe)
             crit_34(dataframe)
             stat_ut(dataframe)
 
             incProgress(0.2, detail = 'Etapa 4 de 10')
             dbh_classes_chart(dataframe)
             dbh_over_ut(dataframe)
-            qf_chart(dataframe)
-            eco_status_chart(dataframe)
 
             incProgress(0.2, detail = 'Etapa 5 de 10')
+            harvest_by_dbh_chart(dataframe)
+            qf_chart(dataframe)
             criterion_1015(dataframe)
-            autex_generate(dataframe)
 
             incProgress(0.2, detail = 'Etapa 6 de 10')
+            autex_generate(dataframe)
             basal_area_by_DBH(dataframe)
 
             incProgress(0.2, detail = 'Etapa 7 de 10')
             basal_area_ut(dataframe)
+            eco_status_chart(dataframe)
 
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
@@ -177,11 +181,13 @@ function(input, output, session) {
              height = 700)
     }, deleteFile = FALSE)
 
-    # output$cutting_plt <- renderImage({
-    #     basal_area_ut(dataframe)
-    #     list(src = './output/Graficos/Selecao_Corte/Selecao_dap.png',
-    #          contentType = 'image/png')
-    # }, deleteFile = FALSE)
+    output$harvest_dbh_plt <- renderImage({
+        harvest_by_dbh_chart(dataframe)
+        list(src = './output/Graficos/Selecao_Corte/Selecao_Corte_dap.png',
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
+    }, deleteFile = FALSE)
 
     output$qf_plot <- renderImage({
         qf_chart(dataframe)
