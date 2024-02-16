@@ -1,43 +1,43 @@
 #' basal_area_table function
-#' 
-#' @description 
-#' This function takes any data frame from a global forest inventory and make a 
+#'
+#' @description
+#' This function takes any data frame from a global forest inventory and make a
 #' a table with the top 10 species that will most receive cutting at basal area.
-#' 
+#'
 #' @param dataset
-#' 
-#' 
+#'
+#'
 
 
-basal_area_table <- function(df) {
-        table3 <- df %>%
+basal_area_table <- function(dataframe) {
+        table3 <- dataframe %>%
                 group_by(nome_cientifico, categoria) %>%
                 summarise(Gsp = sum(g)) %>%
                 #mutate(G_perc = Gsp / sum(Gsp) * 100) %>%
                 spread(key = categoria, fill = 0, value = 'Gsp') %>%
                 rename(gs_exp = Explorar, gs_rem = Remanescente) %>%
                 mutate(GS = gs_exp + gs_rem) %>%
-                mutate(Perc_Exp = (gs_exp / sum(df$g)) * 100) %>%
+                mutate(Perc_Exp = (gs_exp / sum(dataframe$g)) * 100) %>%
                 left_join(fi_horiz[c(1, 10)], by = 'nome_cientifico') %>%
                 filter(gs_exp > 0)
-        
+
         file_name_table <- paste0(
                 './output/dataFrame/tabela_3', '_UMF_', umf, '_UPA_', upa, '.csv'
         )[1]
         write.csv2(table3, file_name_table, row.names = FALSE, fileEncoding = 'latin1')
-        
+
         tabela_3 <- read.csv2(file_name_table)
-        
+
         top10_basal_area <- tabela_3 %>%
                 arrange(desc(Perc_Exp)) %>%
                 filter(row_number() <= 10)
-        
+
         out_top10_basal_area <- glue::glue_collapse(
                 sort(top10_basal_area$nome_cientifico),
                 sep = ', ',
                 last = ' e '
         )
-        
+
         write.table(out_top10_basal_area,
                     file = paste0(
                             './output/Top10_sp_Basal_Area_',
@@ -47,10 +47,10 @@ basal_area_table <- function(df) {
                     sep = ',',
                     col.names = '10 sp com maior corte em area basal:\n',
                     row.names = FALSE)
-        
-        
+
+
         title_tab3 <- paste0('Tabela 3. Relação das 10 espécies que receberão maior intervenção de corte em área basal. Em que: gs_exp = Área Basal a ser cortada por Espécie (m²); gs_rem = Área Basal remanescente por Espécie (m²); GS = Área Basal total por Espécie (m²); DOR = Dominância Relativa por Espécie (%); Perc_Exp = Percentual de Corte em Área Basal por Espécie (m²).')[1]
-        
+
         tab3IF <- tabela_3 %>%
                 arrange(desc(Perc_Exp)) %>%
                 filter(row_number() <= 10) %>%

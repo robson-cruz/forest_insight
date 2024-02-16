@@ -1,29 +1,29 @@
 #' summary_table function
-#' 
-#' @description 
-#' This function takes any data frame from a global forest inventory and make a 
+#'
+#' @description
+#' This function takes any data frame from a global forest inventory and make a
 #' summary table with the data.
-#' 
+#'
 #' @param dataset
-#' 
-#' 
+#'
+#'
 
-summary_table <- function(df) {
-        summaryFI <- df %>%
+summary_table <- function(dataframe) {
+        summaryFI <- dataframe %>%
                 select(dap, g, altura, volume) %>%
                 summary()
-        
+
         write.csv2(
                 summaryFI,
                 './output/dataFrame/Tabela_1.csv',
                 row.names = FALSE
         )
-        
+
         tab <- read.csv2('./output/dataFrame/Tabela_1.csv')
-        
+
         # set table
         title_table <- paste0('Tabela 1. Estatística descritiva para as variáveis do inventário florestal da UPA ', upa, ', UMF ', umf, ', FLONA ', flona,'.<br> Em que: DAP (cm) = Diâmetro a altura do peito calculado em cm; Altura (m) = Altura comercial em metros estimada durante o inventário florestal; g (m²) = Área basal calculada em metros quadrados; Volume (m³)= Volume calculado a partir de equação ajustada para a UMF ', umf, ' unidade em metros cúbicos.')
-        
+
         summary_table <- tab %>%
                 gt() %>%
                 cols_label(
@@ -97,7 +97,7 @@ summary_table <- function(df) {
                         table.width = pct(80),
                         table.background.color = 'white'
                 )
-        
+
         ## Save the Table 1 in .png file format
         gt::gtsave(summary_table, filename = 'Tabela_1.png', path = './output/table')
 }
