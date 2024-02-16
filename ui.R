@@ -12,7 +12,7 @@ shinyUI(
             tags$meta(name = "description", content = "Análise de inventário florestal para Plano de Manejo Florestal Sustentável"),
             tags$meta(name = "keywords", content = "Inventário Florestal, Plano de manejo florestal, POA, PMFS"),
             tags$style(type = "text/css", includeCSS("./www/css/styles.css"))
-               
+
         ),
        tabPanel(
            "Planilha Áreas de Efetivo Manejo",
@@ -30,7 +30,7 @@ shinyUI(
        navbarMenu(
            "Planilhas Modelo",
            tabPanel(
-               "Baixar Inventário Modelo", 
+               "Baixar Inventário Modelo",
                downloadButton(outputId = "Download_inventario_Modelo", label = "Planilha Modelo - Inventário"),
            ),
            tabPanel(
@@ -64,7 +64,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'dapUt'",
-                   plotOutput("BoxPlot_DBH_by_Plt")
+                   plotOutput("BoxPlot_DBH_by_ut_Plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'areaBasalDap'",
@@ -72,7 +72,7 @@ shinyUI(
                ),
                conditionalPanel(
                    condition = "input.plotType == 'areaBasalUt'",
-                   plotOutput("")
+                   plotOutput("basal_area_ut_plt")
                ),
                conditionalPanel(
                    condition = "input.plotType == 'dapCorte'",
