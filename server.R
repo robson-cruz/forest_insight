@@ -147,26 +147,34 @@ function(input, output, session) {
     output$DBH_classes_plot <- renderImage({
         dbh_classes_chart(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
 
     }, deleteFile = FALSE)
 
     output$BoxPlot_DBH_by_ut_Plt <- renderImage({
         dbh_over_ut(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap_UT.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     output$basal_area_DBH_plt <- renderImage({
         basal_area_by_DBH(dataframe)
         list(src = './output/Graficos/Area_Basal/Area_Basal_dap.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     output$basal_area_ut_plt <- renderImage({
         basal_area_ut(dataframe)
         list(src = './output/Graficos/Area_Basal/Area_Basal_ut.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     # output$cutting_plt <- renderImage({
@@ -178,19 +186,25 @@ function(input, output, session) {
     output$qf_plot <- renderImage({
         qf_chart(dataframe)
         list(src = './output/Graficos/Qualidade_de_Fuste/Qualidade_de_Fuste.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     output$status_cutting_plot <- renderImage({
         eco_status_chart(dataframe)
         list(src = './output/Graficos/Selecao_Corte/Selecao_Status_Ecologico.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     output$crit_10.15_plt <- renderImage({
         criterion_1015(dataframe)
         list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
-             contentType = 'image/png')
+             contentType = 'image/png',
+             width = 1024,
+             height = 700)
     }, deleteFile = FALSE)
 
     # Prepare data to save
