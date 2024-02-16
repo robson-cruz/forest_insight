@@ -1,54 +1,54 @@
 #' summary_table function
-#' 
-#' @description 
-#' This function takes any data frame from a global forest inventory and make a 
+#'
+#' @description
+#' This function takes any data frame from a global forest inventory and make a
 #' a table only with commercial species of timber.
-#' 
+#'
 #' @param dataset
-#' 
-#' 
+#'
+#'
 
-commercial_species_table <- function(df) {
-        
+commercial_species_table <- function(dataframe) {
+
         ## Read The List of Endangered Species, according to the Ordinance of the
         ## Brazilian Ministry of Environment (Portaria MMA 443/2014) and Resolution 54/2007
         ## from the Pará state Brazil
         port <- readr::read_csv2(
-                "https://raw.githubusercontent.com/rcDeveloping/endangeredBrazilianPlantSpecies/main/output/Especies_Ameacadas_BRA.csv", 
+                "https://raw.githubusercontent.com/rcDeveloping/endangeredBrazilianPlantSpecies/main/output/Especies_Ameacadas_BRA.csv",
                 locale = readr::locale(encoding = "latin1")
         ) %>%
                 filter(fonte %in% c('PA', 'Portaria 443')) %>%
                 select(-c(1, 4, 5, 6, 8))
-        
+
         # Get all species from Portaria MMA 300/2023
-        port443 <- unique(subset(port, dispositivo_legal == 'Portaria MMA 443/2014', 
+        port443 <- unique(subset(port, dispositivo_legal == 'Portaria MMA 443/2014',
                                     select = 'nome_cientifico'))
-        
+
         # Get all species from Resolução COEMA-PA 24/2007
-        coema_sp <- unique(subset(port, dispositivo_legal == 'Resolução COEMA 54/2007', 
+        coema_sp <- unique(subset(port, dispositivo_legal == 'Resolução COEMA 54/2007',
                                   select = 'nome_cientifico'))
-        
-        com_sp_table <- df %>%
+
+        com_sp_table <- dataframe %>%
                 filter(uso == 'Comercial') %>%
                 group_by(nome_cientifico, categoria) %>%
                 summarise(Total = n()) %>%
                 spread(key = categoria, value = Total) %>%
                 mutate(Total = Explorar + Remanescente)
-        
+
         file_name_table <- paste0(
                 './output/dataFrame/tab2', '_umf_', umf, '_upa_', upa, '_', flona, '.csv'
         )[1]
-        
+
         write.csv2(com_sp_table, file = file_name_table, row.names = FALSE)
-        
+
         com_sp_tab <- read.csv2(file_name_table)
-        
+
         title_table <- paste0('Tabela 2. Relaçãoo de espécies a serem manejadas na UPA ', upa, ', UMF ', umf, ', FLONA ', flona, '.')
-        
+
         table <- com_sp_tab %>%
                 mutate(N = 1:n()) %>%
                 select(N, nome_cientifico, Explorar, Remanescente, Total)
-        
+
         table %<>%
                 gt(rowname_col = 'N') %>%
                 tab_stubhead(label = 'N') %>%
@@ -172,7 +172,7 @@ commercial_species_table <- function(df) {
                         table.width = pct(100),
                         table.background.color = 'white'
                 )
-        
+
         ## Save the Table 2 in .png file format
         gtsave(table, filename = 'Tabela_2.png', path = './output/table')
 }
