@@ -1,15 +1,15 @@
 #' @name basal_area_by_DBH
-#' 
+#'
 #' @title Basal Area by DBH
-#' 
+#'
 #' @description  Generate a bar plot of basal area by diameter at breast height (DBH)
 #'
 #' This function filters a dataframe to include only relevant data points based
 #' on diameter at breast height (dap) and quality factor (qf) to generates a bar
-#' plot showing the total basal area for each diameter class in the provided 
+#' plot showing the total basal area for each diameter class in the provided
 #' data frame. The plot is saved as a PNG file.
 #'
-#' @param df A dataframe containing the data with columns: 
+#' @param df A dataframe containing the data with columns:
 #' dap (diameter at breast height), qf (quality factor), classe2 (tree class)
 #' and g (basal area).
 #'
@@ -23,14 +23,15 @@ basal_area_by_DBH <- function(df) {
     if (!dir.exists(output_dir_plt)) {
         dir.create(output_dir_plt, recursive = TRUE)
     }
-    
+
     png(
         paste0(output_dir_plt, 'Area_Basal_dap', '.png'),
-        width = 1500,
-        height = 950,
+        width = 6,
+        height = 4,
+        units = "in",
         res = 300
     )
-    
+
     basal_area_DBH_plt <- df %>%
         filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
         select(classe2, g) %>%
@@ -44,19 +45,19 @@ basal_area_by_DBH <- function(df) {
                 color = 'black',
                 size = 10,
                 hjust = 0.5),
-            axis.text.x = element_text(angle = 50, size = 6),
-            axis.title.x = element_text(color = 'black', size = 7),
-            axis.title.y = element_text(color = 'black', size = 7),
-            legend.text = element_text(size = 4),
-            legend.title = element_text(size = 5),
+            axis.text.x = element_text(angle = 50, size = 8),
+            axis.title.x = element_text(color = 'black', size = 9),
+            axis.title.y = element_text(color = 'black', size = 9),
+            legend.text = element_text(size = 7),
+            legend.title = element_text(size = 7),
             legend.position = 'bottom'
         ) +
         labs(title = 'Área Basal por Classe de DAP',
              x = 'DAP (cm)',
              y = 'Área Basal (m²)',
              fill = 'Área Basal')
-    
+
     print(basal_area_DBH_plt)
     dev.off()
-    
+
 }
