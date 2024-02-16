@@ -7,7 +7,7 @@
 #' distribution across UTs.
 #'
 #' @param dataframe A dataframe containing at least two columns: 'ut' and 'g' (basal area).
-#' @return A bar plot of basal area by ut, saved as a PNG file.
+#' @return A ggplot object of basal area by ut, saved as a PNG file.
 #'
 #' @import ggplot2
 #' @importFrom dplyr select, summarize, group_by
