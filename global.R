@@ -12,16 +12,16 @@ aem <- NULL
 
 setUploadAem <- function(data) {
         aem <<- data
-        
+
         assign("aem", aem, inherits = TRUE, envir = .GlobalEnv)
 }
 
-inventario <- NULL
+dataframe <- NULL
 
 setUploadedData <- function(data) {
-    inventario <<- data
-        
-    inventario %<>%
+    dataframe <<- data
+
+    dataframe %<>%
         mutate(categoria = R.utils::capitalize(categoria)) %>%
         # Diameter at Breast Height - DBH ("dap" in Portuguese)
         mutate(dap = cap / pi) %>%
@@ -34,6 +34,6 @@ setUploadedData <- function(data) {
         # Define 'Categoria2' column
         mutate(categoria2 = if_else(categoria == "Substituta", "Remanescente", categoria)) %>%
         mutate(categoria2 = factor(categoria2, levels = unique(categoria2)))
-    
-    assign("inventario", inventario, inherits = TRUE, envir = .GlobalEnv)
+
+    assign("dataframe", dataframe, inherits = TRUE, envir = .GlobalEnv)
 }
