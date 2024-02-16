@@ -16,12 +16,12 @@ setUploadAem <- function(data) {
         assign("aem", aem, inherits = TRUE, envir = .GlobalEnv)
 }
 
-dataframe <- NULL
+usr_data <- NULL
 
 setUploadedData <- function(data) {
-    dataframe <<- data
+    usr_data <<- data
 
-    dataframe %<>%
+    usr_data %<>%
         mutate(categoria = R.utils::capitalize(categoria)) %>%
         # Diameter at Breast Height - DBH ("dap" in Portuguese)
         mutate(dap = cap / pi) %>%
@@ -35,5 +35,5 @@ setUploadedData <- function(data) {
         mutate(categoria2 = if_else(categoria == "Substituta", "Remanescente", categoria)) %>%
         mutate(categoria2 = factor(categoria2, levels = unique(categoria2)))
 
-    assign("dataframe", dataframe, inherits = TRUE, envir = .GlobalEnv)
+    assign("usr_data", usr_data, inherits = TRUE, envir = .GlobalEnv)
 }
