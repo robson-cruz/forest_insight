@@ -3,9 +3,9 @@ library(shiny)
 
 shinyUI(
     navbarPage(
-        "Forest Insight v1.0.0 - Apuleia",
+        "Forest Insight v0.0.1 - Apuleia",
         lang = "pt-BR",
-        #tags$head(includeScript("google-analytics.js"))
+        tags$head(includeScript("google-analytics.js")),
         tags$head(
             tags$meta(charset = "UTF-8"),
             tags$meta(name = "viewport", content = "width=device-width, initial-scale=1.0"),
