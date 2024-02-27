@@ -30,10 +30,17 @@ eco_status_chart <- function(dataframe) {
                                   aes(status_conservacao,
                                       fill = as.character(categoria2))) +
         geom_bar(
-            position = position_dodge2(preserve = 'single'),
+            position = position_dodge2(width = 0.7),
             stat = "count",
             alpha = 0.75,
             width = 0.70
+        ) +
+        geom_text(
+            aes(label = scales::percent(..count.. / sum(..count..))),
+            stat = "count",
+            vjust = -0.5,
+            position = position_dodge2(width = 0.7),
+            size = 2.8
         ) +
         theme(
             #axis.text.x = element_text(angle = 50, size = 7),
@@ -41,6 +48,7 @@ eco_status_chart <- function(dataframe) {
             axis.title.x = element_text(size = 9),
             axis.title.y = element_text(size = 9),
             plot.title = element_text(hjust = 0.5, size = 10),
+            legend.tite = element_text(size = 9),
             legend.position = 'bottom'
         ) +
         labs(
