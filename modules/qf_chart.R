@@ -35,12 +35,20 @@ qf_chart <- function(dataframe) {
             alpha = 0.75,
             width = 0.70
         ) +
+        geom_text(
+            aes(label = scales::percent(..count.. / sum(..count..))),
+            stat = "count",
+            position = position_dodge(width = 0.7),
+            vjust = -0.5,
+            size = 2.8
+        ) +
         theme(
             #axis.text.x = element_text(angle = 50, size = 7),
             axis.text.y = element_text(size = 7),
             axis.title.x = element_text(size = 9),
             axis.title.y = element_text(size = 9),
             plot.title = element_text(hjust = 0.5, size = 10),
+            legend.tite = element_text(size = 9),
             legend.position = 'bottom'
         ) +
         labs(
