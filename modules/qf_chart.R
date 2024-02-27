@@ -48,7 +48,7 @@ qf_chart <- function(dataframe) {
             axis.title.x = element_text(size = 9),
             axis.title.y = element_text(size = 9),
             plot.title = element_text(hjust = 0.5, size = 10),
-            legend.tite = element_text(size = 9),
+            legend.title = element_text(size = 9),
             legend.position = 'bottom'
         ) +
         labs(
