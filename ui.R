@@ -3,7 +3,7 @@ library(shiny)
 
 shinyUI(
     navbarPage(
-        "Forest Insight v0.0.1 - Apuleia",
+        "Forest Insight v1.1.0 - Apuleia",
         lang = "pt-BR",
         tags$head(includeScript("google-analytics.js")),
         tags$head(
@@ -91,13 +91,12 @@ shinyUI(
                    plotOutput("crit_10.15_plt")
                )
            ),
-           tabPanel(
-               "Inventário Processado",
-               DT::dataTableOutput(outputId = "verDados")
-           ),
+           tabPanel("Inventário Processado",
+                    DT::dataTableOutput(outputId = "verDados")),
+           
            tabPanel("Resumo Inventário",
-                    verbatimTextOutput(outputId = "summary")
-           ),
+                    verbatimTextOutput(outputId = "summary")),
+           
            tabPanel(
                "Baixar Análise Completa",
                downloadButton(outputId = 'DownloadDataAnalysis', label = 'Download')
