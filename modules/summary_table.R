@@ -52,6 +52,13 @@ summary_table <- function(dataframe) {
             altura = md("**Altura (m)**"),
             vol_geo = md("**Volume (m3)**")
         ) |>
+        cols_width(
+            dap ~ px(100),
+            g ~ px(100),
+            altura ~ px(100),
+            vol_geo ~ px(100),
+            cells_stub() ~ px(100)
+        ) |>
         tab_header(
             title = html(
                 paste("<p style='text-align:justify'><i>", title_table, "</i></p>")
