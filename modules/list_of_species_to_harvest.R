@@ -12,7 +12,7 @@
 #' containing the data of commercial timber species and an image of the table.
 #'
 #' @import dplyr
-#' @importFrom gt
+#' @import gt
 #' @importFrom tidyr spread
 #' @export
 #'
@@ -98,7 +98,7 @@ commercial_species_table <- function(dataframe) {
             locations = list(cells_stubhead(), cells_stub())
         ) %>%
         tab_header(title = html(
-            paste('<p style="align:center"><i>', title_table, '</i></p>')
+            paste('<p style="align:justify"><i>', title_table, '</i></p>')
         )) %>%
         cols_width(
             N ~ px(30),
