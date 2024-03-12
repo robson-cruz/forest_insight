@@ -3,7 +3,7 @@ library(shiny)
 
 shinyUI(
     navbarPage(
-        "Forest Insight v1.1.0 - Apuleia",
+        "Forest Insight v1.0.2 - Apuleia",
         lang = "pt-BR",
         tags$head(includeScript("google-analytics.js")),
         tags$head(
