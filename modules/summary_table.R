@@ -24,6 +24,8 @@
 #' # Assuming df is your dataframe containing forest inventory data
 #' summary_table(df)
 #'
+dataframe <- read.csv2("./output/Inventario_Processado.csv", fileEncoding = "latin1")
+
 summary_table <- function(dataframe) {
     table_dir <- "output/Tabelas/"
     spreadsheet_dir <- "output/Planilhas/"
@@ -36,7 +38,8 @@ summary_table <- function(dataframe) {
         altura = as.vector(summary(dataframe$altura)),
         vol_geo = as.vector(summary(dataframe$vol_geo)),
         row.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo")
-    )
+    ) |>
+        tibble::rownames_to_column(var = "Estatistica")
 
     write.csv2(summary_data, "./output/Planilhas/Tabela_1.csv", row.names = TRUE, fileEncoding = "latin1")
 
@@ -45,7 +48,7 @@ summary_table <- function(dataframe) {
     subtitle_table <- paste0("Em que: DAP (cm) = Diâmetro a altura do peito calculado em cm; Altura (m) = Altura comercial em metros estimada durante o inventário florestal; g (m²) = Área basal calculada em metros quadrados; Volume (m³)= Volume calculado a partir de equação ajustada para a UMF, unidade em metros cúbicos.")
 
     summary_table <- summary_data |>
-        gt(rownames_to_stub = TRUE) |>
+        gt(rowname_col = "Estatistica") |>
         cols_label(
             dap = md("**DAP (cm)**"),
             g = md("**g (m2)**"),
@@ -53,11 +56,8 @@ summary_table <- function(dataframe) {
             vol_geo = md("**Volume (m3)**")
         ) |>
         cols_width(
-            dap ~ px(100),
-            g ~ px(100),
-            altura ~ px(100),
-            vol_geo ~ px(100),
-            cells_stub() ~ px(100)
+            Estatistica ~ px(60),
+            everything() ~ px(80)
         ) |>
         tab_header(
             title = html(
@@ -94,10 +94,9 @@ summary_table <- function(dataframe) {
             style = cell_borders(color = "#fff"),
             locations = cells_stub()
         ) |>
-        tab_options(# make the title size match the body text
+        tab_options(
             #heading.title.font.size = px(14),
-            table.font.size = px(12),
-            table.width = pct(100)
+            table.font.size = px(9)
         ) |>
         tab_options(
             heading.border.bottom.width = 2,
@@ -118,11 +117,10 @@ summary_table <- function(dataframe) {
             table_body.border.bottom.width = 2,
             # hide the bottom-most line or footnotes
             # will have a border
-            table.border.bottom.color = "#fff",
-            # make the width 100%
-            table.width = pct(100),
+            table.border.bottom.color = "#fff"
         )
 
     # Save the Table 1 in .png file format
     gt::gtsave(summary_table, filename = 'Tabela_1.png', path = './output/Tabelas/')
 }
+summary_table(dataframe)
