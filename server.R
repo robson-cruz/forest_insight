@@ -21,6 +21,7 @@ source("./modules/basal_area_by_ut_chart.R")
 source("./modules/classify_species.R")
 source("./modules/harvest_by_dbh_chart.R")
 source("./modules/list_of_species_to_harvest.R")
+source("./modules/summary_table.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -68,8 +69,10 @@ process_data <- function() {
             
             incProgress(0.2, detail = 'Etapa 8 de 10')
             commercial_species_table(dataframe)
+            summary_table(dataframe)
             
             # Generate report using R Markdown
+            incProgress(0.2, detail = 'Etapa 9 de 10')
             rmarkdown::render(input = "report.Rmd", output_file = file.path("output", "report_output.pdf"), output_dir = "output/")
             
             # Final step
