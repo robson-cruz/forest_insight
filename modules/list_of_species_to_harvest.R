@@ -90,7 +90,7 @@ commercial_species_table <- function(dataframe) {
     
     # Create the table
     table |>
-        gt(rowname_col = 'n') |>
+        gt(rowname_col = "n") |>
         tab_stubhead(label = "n") |>
         cols_label(
             nome_cientifico = md("Espécie")
@@ -102,19 +102,17 @@ commercial_species_table <- function(dataframe) {
         tab_header(title = html(
             paste('<p style="align:center"><i>', title_table, '</i></p>')
         )) |>
-        fmt_number(
-            columns = c("Explorar", "Remanescente", "Total"),
-            decimals = 0,
+        fmt_integer(
+            columns = c("n", "Explorar", "Remanescente", "Total"),
             sep_mark = "."
         ) |>
         cols_align(align = "center") |>
-        summary_rows(
-            groups = NULL,
-            #vars = c("Explorar", "Remanescente", "Total"),
-            fns = list(Total = "sum"),
-            fmt = ~ fmt_number(columns = c("Explorar", "Remanescente", "Total"), decimals = 0, use_seps = TRUE),
+        grand_summary_rows(
+            columns = c(Explorar, Remanescente, Total),
+            fns = list(id = "sum_id", label = md("**Total**"), fn = "sum"),
+            fmt = ~ fmt_integer(., use_seps = TRUE),
             sep_mark = ".",
-            stub = TRUE
+            missing_text = ""
         ) |>
         tab_style(
             style = cell_text(style = "italic"),
@@ -130,9 +128,7 @@ commercial_species_table <- function(dataframe) {
                 cell_text(align = "center"),
                 cell_fill(color = "#fff", alpha = NULL)
             ),
-            locations =
-                cells_body(columns = everything(),
-                           rows = everything())
+            locations = cells_body(columns = everything(), rows = everything())
         ) |>
         tab_style(style = cell_borders(color = "#fff"),
                   locations = cells_stub()) |>
@@ -159,18 +155,23 @@ commercial_species_table <- function(dataframe) {
             table.font.size = px(9),
             footnotes.multiline = FALSE,
             data_row.padding = px(2),
+            grand_summary_row.padding = px(2),
             heading.border.bottom.width = 2,
             heading.border.bottom.color = "#000000",
             # hide the top-most border
             table.border.top.color = '#fff',
-            # change the column labels section
+            # change borders
+            summary_row.border.width = 2,
+            summary_row.border.color = "#000000",
+            grand_summary_row.border.width = 2,
+            grand_summary_row.border.color = "#000000",
             column_labels.border.top.width = 2,
             column_labels.border.top.color = "#000000",
             column_labels.border.bottom.width = 2,
             column_labels.border.bottom.color = "#000000",
             # Change the vertical lines of summary body
             stub.border.color = "#fff",
-            #stub.background.color = "#fff",
+            stub.background.color = "#fff",
             stub_row_group.border.color = "#fff",
             # Change the foot source body
             footnotes.border.bottom.color = "#fff",
