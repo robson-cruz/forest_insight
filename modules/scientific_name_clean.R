@@ -129,10 +129,12 @@ scientific_name_clean <- function(dataframe) {
     }
 
     if (nrow(typo > 0)) {
-            write.csv2(typo,
-                       paste0(output_dir_not, "Erros_Digitacao.csv"),
-                       row.names = FALSE,
-                       fileEncoding = "latin1")
+        write.csv2(
+            typo,
+            paste0(output_dir_not, "Erros_Digitacao.csv"),
+            row.names = FALSE,
+            fileEncoding = "latin1"
+        )
     }
 
     # Filter taxonomic synonyms and save it
@@ -142,12 +144,25 @@ scientific_name_clean <- function(dataframe) {
         unique()
 
     if (nrow(synonyms > 0)) {
-        write.csv2(synonyms,
-                   paste0(output_dir_not, "sinonimos_taxonomicos.csv"),
-                   row.names = FALSE,
-                   fileEncoding = "latin1")
+        write.csv2(
+            synonyms,
+            paste0(output_dir_not, "sinonimos_taxonomicos.csv"),
+            row.names = FALSE,
+            fileEncoding = "latin1"
+        )
     }
-
+    
+    # Save forest inventory
+    output_dir <- "./output/"
+    if (!dir.exists(output_dir)) dir.create(output_dir)
+    
+    write.csv2(
+        dataframe,
+        paste0(output_dir, "Inventario_Processado.csv"),
+        fileEncoding = "latin1",
+        row.names = FALSE
+    )
+    
     # Assign the new data frame to the user's global environment
     assign("dataframe", dataframe, envir = .GlobalEnv)
 }
