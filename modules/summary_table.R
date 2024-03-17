@@ -24,8 +24,6 @@
 #' # Assuming df is your dataframe containing forest inventory data
 #' summary_table(df)
 #'
-dataframe <- read.csv2("./output/Inventario_Processado.csv", fileEncoding = "latin1")
-
 summary_table <- function(dataframe) {
     table_dir <- "output/Tabelas/"
     spreadsheet_dir <- "output/Planilhas/"
