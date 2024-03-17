@@ -121,4 +121,3 @@ summary_table <- function(dataframe) {
     # Save the Table 1 in .png file format
     gt::gtsave(summary_table, filename = 'Tabela_1.png', path = './output/Tabelas/')
 }
-summary_table(dataframe)
