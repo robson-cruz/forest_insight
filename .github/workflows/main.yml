@@ -19,7 +19,7 @@ jobs:
     
     steps:
       - name: User and Token
-        uses: peter-evans/close-issue@v4
+        uses: peter-evans/close-issue@v5
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           close-issue-message: "hello! :wave:\n\nThis issue is being automatically closed because it was solved."
