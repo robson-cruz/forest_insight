@@ -16,8 +16,12 @@ jobs:
     
     permissions:
       issues: write
-    
+
     steps:
+      - name: User Token
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          
       - name: Close Issue
         id: close_issue
         run: |
