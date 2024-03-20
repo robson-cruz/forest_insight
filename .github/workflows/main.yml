@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Close Issue Action
-        uses: peter-evans/close-issue@v4
+        uses: peter-evans/close-issue@v3
 
       - name: Close Issue
         id: close_issue
