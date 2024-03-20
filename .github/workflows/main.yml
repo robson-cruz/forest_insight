@@ -29,22 +29,22 @@ jobs:
         
           # Closes issues found in commits
           for ISSUE_NUMBER in $ISSUE_NUMBERS; do
-            echo "Fechando issue #$ISSUE_NUMBER"
-            # Verifica se o número da issue está vazio
+            echo "Closing issue #$ISSUE_NUMBER"
+            # Verifies if the issue number is empty
             if [ -z "$ISSUE_NUMBER" ]; then
-              echo "Número de issue vazio. Ignorando."
+              echo "Empty issue number. Skipping."
               continue
             fi
           
             # Close issues
-            curl -X PATCH\
+            curl -X PATCH \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
               -H "Content-Type: application/json" \
-              https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/lock \
+              https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER \
               -d '{"state":"closed"}'
-
-             # Optionally, add labels after closing the issue
+              
+            # Optionally, add labels after closing the issue
             curl -X POST \
               -H "Accept: application/vnd.github.v3+json" \
               -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
