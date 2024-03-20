@@ -1,0 +1,137 @@
+---
+title: "Análise de Inventário Florestal"
+output: 
+    pdf_document: 
+      includes:
+        in_header: www/css/header.tex
+      keep_tex: true
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
+bibliography: "www/citation/referencias.bib"
+csl: "www/citation/abnt.csl"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+library(dplyr)
+
+source("./modules/harvest_intensity.R")
+# dataframe <- read.csv2("./output/Inventario_Processado.csv", fileEncoding = "latin1") |>
+#     mutate(qf = factor(qf, levels = unique(qf))) |>
+#     mutate(categoria2 = factor(categoria2, levels = unique(categoria2))) |>
+#     mutate(
+#         status_conservacao = factor(status_conservacao,
+#                                     levels = c('Não Ameaçada', 'Vulnerável', 'Em Perigo'))
+#     )
+```
+
+## INTRODUÇÃO
+
+|       A Lei 11.284, de 2 de março de 2006, define o manejo ﬂorestal como administração da ﬂoresta para a obtenção de benefícios econômicos, sociais e ambientais, respeitando-se os mecanismos de sustentação do ecossistema objeto do manejo e considerando-se, cumulativa ou alternativamente, a utilização de múltiplas espécies madeireiras, de múltiplos produtos e subprodutos não madeireiros, bem como a utilização de outros bens e serviços de natureza ﬂorestal.
+
+|       O Plano de Manejo Florestal Sustentável (PMFS) é um documento técnico, no qual o interessado submete ao órgão ambiental licenciador proposta técnica para administração da floresta visando a produção de produtos florestais madeireiros e/ou não madeireiros. Após análise técnica e deferimento do PMFS o detentor apresenta ao órgão licenciador o seu Plano Operacional Anual (POA), no qual é apresentado o resultado e análise do inventário florestal realizado na área da Unidade de Produção Anual (UPA), assim como o cronograma de execução das atividades voltadas à produção florestal no período de doze meses, as quais devem estar alinhadas às diretrizes técnicas e legais aprovadas no âmbito do PMFS. O inventário florestal para PMFS de florestas nativas é realizado em todas as árvores das espécies de interesse comercial atual e futuro que ocorrem na área na UPA, por isso também e denominado censo florestal. O censo florestal fornece informações quantitativas e qualitativas da floresta a ser manejada, permitindo ainda modelagem do estoque futuro da floresta através de análise das curvas de distribuição diamétrica das espécies arbóreas.
+
+## LOCALIZAÇÃO
+
+## ANÁLISE DOS DADOS VETORIAIS
+
+## ANÁLISE DO INVENTÁRIO FLORESTAL
+|       O inventário florestal foi analisado considerando os parâmetros estabelecidos na Instrução Normativa n° 5, de 11 de dezembro de 2006; Norma de Execução Ibama nº 2, de 26 de abril de 2007, ajustada pela Norma de Execução nº 1, de 3 de março de 200; Resolução CONAMA n° 406, 02 de fevereiro de 2009; Portaria MMA nº. 443 de 17 de dezembro de 2014 e Instrução Normativa MMA nº 1, de 12 de fevereiro de 2015.
+
+|       O inventário florestal para PMFS de florestas nativas é realizado em todas as árvores das espécies de interesse comercial atual e futuro que ocorrem na área da UPA e que apresentem diâmetro à altura do peito (DAP) maior ou igual a 10 cm abaixo do diâmetro mínimo de corte (50 cm), por isso também é denominado censo florestal. O censo florestal fornece informações quantitativas e qualitativas da floresta a ser manejada, permitindo ainda modelagem do estoque futuro da floresta através de análise das curvas de distribuição diamétrica das espécies arbóreas.
+
+|       Foram inventariadas no total `r nrow(dataframe)` árvores distribuídas em `r length(unique(dataframe$nome_cientifico))` espécies com volume total inventariado de `r prettyNum(sum(dataframe$vol_geo), scientific=FALSE, big.mark=".", decimal.mark=",")` m³ em uma área líquida de `r sum(unique(dataframe$aem))` ha da UPA, a qual foi dividida em `r length(unique(dataframe$ut))` Unidades de Trabalho (UT). O volume selecionado para corte é `r prettyNum(sum(dataframe[dataframe$categoria2=="Explorar", "vol_geo"]), scientific=FALSE, big.mark=".", decimal.mark=",")` m³, o que resulta em uma intensidade de corte de `r round(logging_intensity(dataframe),2)` m³/ha.
+
+|       A Tabela 1 mostra a estatística descritiva das principais variáveis registradas durante o inventário florestal da UPA analisada, onde se observa que o diâmetro mínimo inventariado foi `32,79` cm de diâmetro a altura do peito (DAP), o que atende as normas técnicas que definem o diâmetro mínimo de mediação 10 cm abaixo do diâmetro mínimo de corte (DMC). O DMC adotado no POA foi de `r min(dataframe[dataframe$categoria2=="Explorar", "dap"])` cm de DAP para todas as espécies passíveis de corte. Os critérios de seleção para corte são DMC igual a 50 cm e qualidade de fuste diferente de 3, além de análise de raridade para cada espécie, e o que estabelecem os dispositivos legais de proteção de espécies vulneráveis e em perigo de extinção.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Tabelas/Tabela_1.png")
+```
+
+|       As árvores selecionadas para corte, compreendem um conjunto de `r nrow(dataframe[dataframe$categoria2=="Explorar",])` árvores de
+`r length(unique(dataframe[dataframe$categoria2=="Explorar", "nome_cientifico"]))` espécies florestais; destas espécies, 
+`r length(unique(dataframe[dataframe$categoria2=="Explorar" & dataframe$status_conservacao=="Vulnerável", "nome_cientifico"]))` estão listadas como vulneráveis, considerando a Portaria MMA n° 443/2014 e a Resolução CEMA-PA 54/2007, a saber: 
+`r glue::glue_collapse((unique(dataframe[dataframe$categoria2=="Explorar" & dataframe$status_conservacao=="Vulnerável", "nome_cientifico"])), sep = ", ", last = " e ")`. O número total de árvores de espécies vulneráveis selecionadas para corte totaliza 
+`r length((dataframe[dataframe$categoria2=="Explorar" & dataframe$status_conservacao=="Vulnerável", "nome_cientifico"]))` árvores. A Tabela 2 mostra a relação de espécies a serem manejadas na UPA.
+
+
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Tabelas/Tabela_2.png")
+```
+
+|       No que se refere ao critério de manutenção de pelo menos 10% do número de árvores com fustes comerciais e com diâmetros maiores ou iguais ao DMC, nos termos da Instrução Normativa 5/2006 e Norma de Execução IBAMA 2/2007, infere-se que a proposta do POA está adequada, pois o menor percentual mantido é `16`%, conforme mostra a Figura 3.
+
+|       A Figura 3 mostra o percentual de árvores remanescentes na UPA, conforme a seleção feita pelo responsável técnico pelo projeto, onde o início de cada linha com um ponto no cor verde, indica o percentual mínimo estabelecido nas normas técnicas para manejo florestal (10 a 15%) e o fim da linha representa o percentual que será deixado na UPA pela empresa após a execução do manejo florestal. Nesta figura, é possível observar que a seleção para corte `está` em conformidade com os critérios de 10% e 15% de remanescentes das árvores que atendem aos critérios de seleção para corte estabelecidos no PMFS para espécies não vulneráveis e vulneráveis, pois o menor percentual para estas espécies é `15`% e `24`%, respectivamente.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png")
+```
+
+|       Em relação ao critério de manutenção de pelo menos 3 a 4 árvores por espécie a cada 100 hectares de área de efetiva exploração, em cada UT, conforme estabelecem as Instruções Normativas MMA 5/2006 e 1/2015, assim como a Resolução CONAMA 406/2009, a proposta do POA está `adequada` às normas técnicas, pois após a conferência do censo ﬂorestal, veriﬁcou-se que o critério `foi atendido` para todas as espécies a serem manejadas em todas as UT.
+
+### DISTRIBUIÇÃO DIAMÉTRICA DA UPA
+|       Segundo [reis_etal_2014] a análise da distribuição diamétrica de uma floresta é ferramenta útil para caracterizar o estoque em crescimento por espécie e da comunidade, além de auxiliar no planejamento da exploração mais sustentável, podendo o silvicultor balancear a intensidade de colheita entre as classes de diâmetro. A Figura 6 mostra a distribuição diamétrica das árvores inventariadas na UPA, onde é possível observar que `a maioria das árvores se encontram distribuídas nas classes iniciais de diâmetro, o que indica que a área possui estoque de espécies para exploração futura e manutenção da regeneração florestal na UPA`.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap.png")
+```
+
+|       A Figura 7 mostra a distribuição por UT da variável DAP na UPA. A partir da análise das Figuras 5 e 6 é possível inferir que a área específica da UPA em questão é uma floresta `sem` eventos pretéritos de exploração florestal, pois a amplitude de DAP se observa em todas as UT e a estrutura diamétrica da floresta apresenta forma exponencial negativa [@carvalho_nascimento_2009; @orellana_figueiredo_etal_2014; @Cysneiros_Amorim_Mendonça_etal_2017].
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap_UT.png")
+```
+
+#### ÁREA BASAL
+
+|       A Figura 4 demonstra o comportamento da distribuição da área basal em cada UT, considerando apenas árvores que atendem aos critérios de seleção para corte. `É possível observar que as UT com área basal bem acima e abaixo da média geral para a UPA`. Esse mesmo comportamento se reflete na distribuição da variável volume comercial, pois a variável área basal faz parte do cálculo da volumetria das árvores. As UT que estão muito abaixo da média geral, pode ser um indicativo de que estas áreas necessitam de tratamento silvicultural do tipo anelamento para eliminar copas de árvores sem valor comercial, e assim priorizar recursos às árvores de interesse comercial na UPA para o próximo ciclo de corte.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Area_basal/Area_basal_UT.png")
+```
+
+|       Quanto a distribuição da área basal total por classe de diâmetro na área da UPA, considerando apenas as espécies de interesse comercial, se observa que as classes com as maiores áreas basais são as que compreendem as amplitudes `60-70` cm até `100-110` cm, conforme demonstrado na Figura 5. A área basal é um importante parâmetro da densidade do povoamento florestal, pois fornece o grau de ocupação de determinada área por madeira, portanto, as intervenções de corte devem ocorrer mais acentuadas nas classes que apresentam maior área basal.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Area_basal/Area_Basal_dap.png")
+```
+
+|       Na UPA ora analisada, as espécies que apresentaram as maiores dominâncias em área basal foram: `Bertholletia excelsa (10.95%), Goupia glabra (10.59%), Cariniana micrantha (7.97%), Caryocar glabrum (5.92%), Couratari guianensis (5.9%), Parkia pendula (4.68%), Handroanthus impetiginosus (3.42%), Dinizia excelsa (3.27%), Manilkara elata (3.07%) e Brosimum parinarioides (2.97%)`.
+
+|       A proposta do presente POA é remoção de `37,42`% da área basal disponível nas espécies que atendem ao critério de seleção para corte, sendo que a remoção de área basal será mais intensa nas espécies `Buchenavia grandis, Cariniana micrantha, Caryocar glabrum, Caryocar villosum, Couratari guianensis, Dinizia excelsa, Goupia glabra, Handroanthus impetiginosus, Manilkara elata e Ocotea puberula`. A maioria destas espécies está entre as que apresentaram a maior dominância na UPA em questão. As tabelas 3 e 4 mostram a relação de espécies com maior dominância na UPA 1 e a intervenção na área basal por UT, respectivamente.
+
+
+## SELEÇÃO DE ÁRVORES
+|       A seleção de árvores pode ser visualizada na Figura 8, onde se demonstra a intervenção por classes diamétricas, considerando todas as espécies inventariadas que atendem aos critérios de seleção para corte definido no PMFS, a saber: diâmetro mínimo de corte maior ou igual a 50cm e qualidade de fuste 1 e 2. A seleção para corte proposta pela empresa mostra uma intervenção maior nas classes com maior distribuição de área basal, o que está adequado à distribuição diamétrica da floresta a ser manejada.
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Selecao_Corte/Selecao_Corte_dap.png")
+```
+
+|       A figura 9 mostra a seleção de árvores inventariadas em função da qualidade de fuste, onde pode ser observado que as árvors selecionadas para corte estão distribuídas nas classes de fuste `1 e 2`. A figura permite ainda observar que `não há` árvores de espécies em perigo de extinção selecionadas para corte. 
+
+```{r, echo=FALSE}
+knitr::include_graphics("output/Graficos/Qualidade_de_Fuste/Qualidade_de_Fuste.png")
+```
+
+|       A figura 10 mostra a seleção de árvores inventariadas em função qualidade de fuste, onde pode ser observado que as árvors selecionadas para
+corte estão distribuídas nas classes de fuste `1 e 2`.
+
+```{r, echo=FALSE}
+# juntar dois gráficos
+knitr::include_graphics("output/Graficos/Selecao_Corte/Selecao_Status_Ecologico.png")
+```
+
+## PENDÊNCIAS
+|       Foram observadas as seguintes pendências: `xxxxxx`
+
+## CONCLUSÃO
+
+REFERÊNCIAS BIBLIOGRÁFICAS
+
+<div id="refs"></div>
