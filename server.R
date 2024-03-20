@@ -1,5 +1,12 @@
 library(shiny)
 library(ggplot2)
+library(webshot2)
+# force the use of pagedown to install chrome on shinyapps.io
+library(pagedown)
+# force the use of curl because chromote needs it
+library(curl)
+library(rmarkdown)
+library(tinytex)
 
 
 # Source script
@@ -22,6 +29,8 @@ source("./modules/classify_species.R")
 source("./modules/harvest_by_dbh_chart.R")
 source("./modules/list_of_species_to_harvest.R")
 source("./modules/summary_table.R")
+source("./modules/harvest_intensity.R")
+source("./modules/report_build.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -70,10 +79,12 @@ process_data <- function() {
             incProgress(0.2, detail = 'Etapa 8 de 10')
             commercial_species_table(dataframe)
             summary_table(dataframe)
+            logging_intensity(dataframe)
             
             # Generate report using R Markdown
             incProgress(0.2, detail = 'Etapa 9 de 10')
-            rmarkdown::render(input = "report.Rmd", output_file = file.path("output", "report_output.pdf"), output_dir = "output/")
+            render_report()
+
             
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
@@ -86,7 +97,7 @@ process_data <- function() {
 
 # Define server function
 function(input, output, session) {
-
+    
     observe({
         if (!is.null(input$uploadAem)) {
             tryCatch({
@@ -123,7 +134,27 @@ function(input, output, session) {
             }
         })
     })
-
+    
+    if (identical(Sys.getenv("R_CONFIG_ACTIVE"), "shinyapps")) {
+        chromote::set_default_chromote_object(
+            chromote::Chromote$new(chromote::Chrome$new(
+                args = c("--disable-gpu", 
+                         "--no-sandbox", 
+                         "--disable-dev-shm-usage",
+                         c("--force-color-profile", "srgb"))
+            ))
+        )
+    }
+    
+    output$downloadScreenshot <- downloadHandler(
+        filename = function() {
+            paste("screenshot-", Sys.Date(), ".png", sep="")
+        },
+        content = function(file) {
+            webshot2::webshot("https://github.com/rstudio/shiny", file)
+        }
+    )
+    
     observeEvent(input$uploadFileInventario, {
         output$fileStatusInventario <- renderText({
             if (!is.null(usr_data)) {
@@ -177,7 +208,7 @@ function(input, output, session) {
 
     output$basal_area_DBH_plt <- renderImage({
         basal_area_by_DBH(dataframe)
-        list(src = './output/Graficos/Area_Basal/Area_Basal_dap.png',
+        list(src = './output/Graficos/Area_basal/Area_Basal_dap.png',
              contentType = 'image/png',
              width = 1024,
              height = 700)
@@ -185,7 +216,7 @@ function(input, output, session) {
 
     output$basal_area_ut_plt <- renderImage({
         basal_area_ut(dataframe)
-        list(src = './output/Graficos/Area_Basal/Area_Basal_ut.png',
+        list(src = './output/Graficos/Area_basal/Area_Basal_ut.png',
              contentType = 'image/png',
              width = 1024,
              height = 700)
@@ -223,7 +254,7 @@ function(input, output, session) {
              height = 700)
     }, deleteFile = FALSE)
     
-    # Prepare data to save
+    # Prepare the analysis to save
     output$DownloadDataAnalysis <- downloadHandler(
         filename = function() {
             paste('Dados_Processados_', Sys.Date(), '.zip', sep = '')
@@ -235,6 +266,7 @@ function(input, output, session) {
                        row.names = FALSE,
                        fileEncoding = 'latin1')
             
+            # List files and zip them
             files_to_zip = list.files("./output/",
                                       recursive = TRUE,
                                       full.names = TRUE,
