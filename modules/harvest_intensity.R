@@ -19,8 +19,10 @@
 #' @export
 logging_intensity <- function(dataframe) {
     
-    intensidade_corte_dir <- "./output/Intensidade_Corte/"
-    if (!dir.exists(intensidade_corte_dir)) dir.create(intensidade_corte_dir)
+    logging_intensity_dir <- "./output/Intensidade_Corte/"
+    issue_logging_intensity_dir <- "./output/Pendencias/"
+    if (!dir.exists(logging_intensity_dir)) dir.create(logging_intensity_dir)
+    if (!dir.exists(issue_logging_intensity_dir)) dir.create(issue_logging_intensity_dir)
     
     # Calculate total volume of logging
     volume_upa <- dataframe |>
@@ -41,14 +43,34 @@ logging_intensity <- function(dataframe) {
     # Calculate intensity of logging
     intensity <- volume / area
     
-    output_text <- paste(
-        "Os dados do inventário florestal mostram uma intensidade de corte de",
-        intensity, "m³/ha."
+    # Define texts
+    ref <- c(
+        "A Norma de Execução IBAMA Nº 1, de 24 abril de 2007 e a Instrução Normativa MMA Nº 5, de 11 de dezembro de 2006, estabelecem os limites máximos de corte:",
+        "10 m³/ha para PMFS de baixa intensidade, onde o ciclo de corte deve ser de 10 anos.",
+        "30 m³/ha para PMFS Pleno, observando os limites máximo de 35 anos e mínimo 25 anos para ciclo de corte."
     )
     
+    if (intensity <= 30) {
+        intensity_text <- paste(
+            "Os dados do inventário florestal mostram uma intensidade de corte de",
+            round(intensity, 2), "m³/ha."
+        )
+    } else {
+        intensity_text <- paste(
+            "Os dados do inventário florestal mostram uma intensidade de corte de",
+            round(intensity, 2), "m³/ha, o que não está de acordo com as normas para manejo florestal na Amazônia."
+        )
+        writeLines(
+            c(ref, intensity_text),
+            con = paste0(issue_logging_intensity_dir, "Intensidade_Corte.txt")
+        )
+    }
+    
     # Write the output to a text file
-    writeLines(output_text,
-               con = paste0(intensidade_corte_dir, "Intensidade_Corte.txt"))
+    writeLines(
+        c(ref, intensity_text),
+        con = paste0(logging_intensity_dir, "Intensidade_Corte.txt")
+    )
     
     return(intensity)
 }
