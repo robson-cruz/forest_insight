@@ -149,17 +149,17 @@ body>nav>div>ul>li.dropdown.open>ul>li {
 }
 
 /* Adicione um novo estilo para ocultar os tabPanels */
-
+/*
 .tab-pane.hidden {
         display: none;
 }
 
-/* Esconde os tabPanels quando a classe hide-tab está presente */
+/* Esconde os tabPanels quando a classe hide-tab está presente*/
 .tab-pane.hide-tab {
         display: none !important;
 }
 
-/* Esconde os tabPanels quando os navbarMenus são clicados */
+/* Esconde os tabPanels quando os navbarMenus são clicados
 .navbar-nav .dropdown-menu .nav-link[data-value="Planilhas Modelo"]+.dropdown-menu .nav-link[data-value="Planilha Áreas Efetivo Manejo"],
 .navbar-nav .dropdown-menu .nav-link[data-value="Planilhas Modelo"]+.dropdown-menu .nav-link[data-value="Planilha Inventário"],
 .navbar-nav .dropdown-menu .nav-link[data-value="Normas Florestais"]+.dropdown-menu .nav-link[data-value="Planilha Áreas Efetivo Manejo"],
@@ -168,7 +168,7 @@ body>nav>div>ul>li.dropdown.open>ul>li {
 .navbar-nav .dropdown-menu .nav-link[data-value="Ver Análise"]+.dropdown-menu .nav-link[data-value="Planilha Inventário"] {
         display: none !important;
 }
-
+ */
 #fileStatusAem,
 #fileStatusInventario {
         margin: 0 auto;
@@ -275,6 +275,9 @@ tbody {
 # Mobile Navigation - Tablets
 --------------------------------------------------------------*/
 @media (max-width: 768px) {/* iPad Mini */
+        .dropdown:active {
+
+        }
         /* Gráficos */
         #plotType .shiny-options-group {
                 width: 100%;
@@ -332,3 +335,94 @@ tbody {
                 scrollbar-width: inherit;
         }
 }
+/*
+@media (max-width: 1114px) {/* Galaxy Tab 57 (800px) iPad Pro 11 (834px) iPad Air 4 (820px) Microsoft Surface Duo (1114px)
+        /* Menu
+        nav li,
+        li.dropdown {
+                display: block;
+                justify-content: center;
+                justify-items: center;
+                width: 100%;
+                margin: 5px 0 !important;
+        }
+        body>nav>div>ul>li.dropdown.open>ul {
+                display: block !important;
+                justify-content: center;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li {
+                display: block;
+                font-size: 0.96em;
+                transition: all .5s ease-in;
+                margin: 5px 0 !important;
+                word-break: break-all !important;
+                justify-content: center;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li>a {
+                display: block;
+                font-size: 0.96em;
+                justify-content: center;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li>a:hover {
+                font-weight: bold;
+        }
+        /* Gráficos 
+        #plotType .shiny-options-group {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+                display: inline-block;
+                border: none;
+        }
+        form.well {
+                display: flex;
+                max-height: 180px;
+                border: none;
+        }
+        .col-sm-4 #plotType-label {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-top: 5px;
+        }
+        .col-sm-4 {
+                background-color: hsl(0, 5%, 89%, .3);
+                padding: 5px;
+                display: inline-block;
+                justify-content: center;
+                margin-top: 10px;
+                width: 100%; 
+                position: relative;
+                flex-wrap: wrap;
+        }
+        .radio {
+                display: inline-block;
+                flex-direction: row;
+                position: relative;
+                padding-right: 5px;
+        }
+        .shiny-bound-output img {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }              
+        /*Tabela Inventário
+        .dataTables_wrapper.no-footer {
+                max-width: 100%;
+                scrollbar-color: rgba(78, 78, 77, 0.2);
+                scrollbar-width: auto;
+        }
+        /* Resumo do Inventário 
+        pre {
+                margin: 0 auto;
+                max-width: 760px;
+                width: 100%;
+                margin-top: 30px;
+                font-size: 0.74em;
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: inherit;
+        }
+}
+*/
