@@ -270,3 +270,65 @@ tbody {
                 scrollbar-width: inherit;
         }
 }
+
+/*--------------------------------------------------------------
+# Mobile Navigation - Tablets
+--------------------------------------------------------------*/
+@media (max-width: 768px) {/* iPad Mini */
+        /* Gráficos */
+        #plotType .shiny-options-group {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+                display: inline-block;
+                border: none;
+        }
+        form.well {
+                display: flex;
+                max-height: 180px;
+                border: none;
+        }
+        .col-sm-4 #plotType-label {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-top: 5px;
+        }
+        .col-sm-4 {
+                background-color: hsl(0, 5%, 89%, .3);
+                padding: 5px;
+                display: inline-block;
+                justify-content: center;
+                margin-top: 10px;
+                width: 100%; 
+                position: relative;
+                flex-wrap: wrap;
+        }
+        .radio {
+                display: inline-block;
+                flex-direction: row;
+                position: relative;
+                padding-right: 5px;
+        }
+        .shiny-bound-output img {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }              
+        /*Tabela Inventário*/
+        .dataTables_wrapper.no-footer {
+                max-width: 100%;
+                scrollbar-color: rgba(78, 78, 77, 0.2);
+                scrollbar-width: auto;
+        }
+        /* Resumo do Inventário */
+        pre {
+                margin: 0 auto;
+                max-width: 700px;
+                width: 100%;
+                margin-top: 30px;
+                font-size: 0.74em;
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: inherit;
+        }
+}
