@@ -30,7 +30,7 @@ basal_area_ut <- function(dataframe) {
         select(ut, g) %>%
         summarize(G_avg = sum(g)/length(unique(dataframe$ut))) # Get total mean basal area
 
-    output_dir_plt <- "./output/Graficos/Area_Basal/"
+    output_dir_plt <- "./output/Graficos/Area_basal/"
     if (!dir.exists(output_dir_plt)) {
         dir.create(output_dir_plt)
     }

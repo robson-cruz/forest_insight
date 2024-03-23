@@ -1,37 +1,121 @@
-/*Telas pequenas*/
-@media only screen and (max-width: 600px) {}
-    
-/*Telas Médias*/
-@media only screen and (min-width: 601px) and (max-width: 1200px) {}    
-
-.navbar {
+nav {
+        margin: 0;
+        padding: 0;
+        text-align: center;
         font-size: 20px;
+        position: relative;
+        align-items: center;
 }
 
-.navbar {
-        font-size: 20px;
+.bslib-page-navbar {
+        justify-content: left;
 }
 
-.dropdown-menu li {
-        font-size: 18px;
+.container-fluid {
+        height: 100px;
+        width: 100%;
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
+        display: block;
+        font-size: 1.6em;
+}
+
+.navbar-default.navbar-static-top {
+        margin: 0 auto;
+        width: fit-content;
+        align-items: center;
+        justify-content: center;
+}
+
+/* Estilo para a marca da barra de navegação */
+.navbar-brand {
+        float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: left;
+        font-size: 0.85em;
+        font-style: italic;
+        margin-top: 25px;
+}
+
+nav li,
+li.dropdown {
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-top: 25px;
+}
+
+body>nav>div>ul>li.dropdown.open>ul {
+        font-size: 0.96em;
+        transition: all .5s ease-in-out;
+}
+
+body>nav>div>ul>li.dropdown.open>ul>li>a {
+        font-size: 0.96em;
+        transition: all .5s ease-in-out;
+        margin-top: auto;
+        padding: 1rem;
+}
+
+body>nav>div>ul>li.dropdown.open>ul>li>a:hover {
+        color: #12c964;
+}
+
+body>nav>div>ul>li.dropdown.open>ul>li {
+        font-size: 0.96em;
+        transition: all .5s ease-in-out;
 }
 
 .form-group.shiny-input-container {
-        fonte-size: 28px;
+        font-size: 20px;
+        margin-top: 30px;
 }
 
-.tab-pane a {
-        font-size: 28px;
+/* Center input e button files */
+.tab-pane.active .btn,
+.form-control,
+.tab-pane.active .form-control span,
+.shiny-input-container {
+        display: block;
+        text-align: center;
+        justify-content: center;
+        align-self: center;
+        margin: 0 auto;
+        width: fit-content;
+}
+
+.input-group .form-control {
+        height: auto !important;
+}
+
+.input-group .btn-file {
+        height: auto !important;
+}
+
+.input-group .form-control,
+.input-group .btn-file {
+        height: 32px;
+        /* Ajuste conforme necessário para corresponder à altura do botão */
+        line-height: 32px;
+        /* Mantém o texto centralizado verticalmente */
+        padding: 6px 12px;
+        /* Ajuste conforme necessário para o espaçamento interno */
 }
 
 .btn.btn-default.shiny-download-link.shiny-bound-output {
         background: #77b379;
         font-size: 28px;
+        text-align: center;
+        margin-top: 30px;
 }
 
 .btn.btn-default.btn-file {
         background: orange;
         font-size: 18px;
+        text-align: center;
 }
 
 .btn.btn-default.action-button.shiny-bound-input {
@@ -40,15 +124,305 @@
         color: white;
 }
 
+.active>#tab-9775-3 {
+        /* float: right; */
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        margin: 0 auto;
+        display: block;
+        width: fit-content;
+        align-self: center;
+}
+
+.shiny-bound-output {
+        margin-top: 30px;
+}
+
+.well {
+        width: fit-content;
+        text-align: left;
+}
+
+.radio {
+        text-align: left;
+}
+
+/* Adicione um novo estilo para ocultar os tabPanels */
+/*
+.tab-pane.hidden {
+        display: none;
+}
+
+/* Esconde os tabPanels quando a classe hide-tab está presente*/
+.tab-pane.hide-tab {
+        display: none !important;
+}
+
+/* Esconde os tabPanels quando os navbarMenus são clicados
+.navbar-nav .dropdown-menu .nav-link[data-value="Planilhas Modelo"]+.dropdown-menu .nav-link[data-value="Planilha Áreas Efetivo Manejo"],
+.navbar-nav .dropdown-menu .nav-link[data-value="Planilhas Modelo"]+.dropdown-menu .nav-link[data-value="Planilha Inventário"],
+.navbar-nav .dropdown-menu .nav-link[data-value="Normas Florestais"]+.dropdown-menu .nav-link[data-value="Planilha Áreas Efetivo Manejo"],
+.navbar-nav .dropdown-menu .nav-link[data-value="Normas Florestais"]+.dropdown-menu .nav-link[data-value="Planilha Inventário"],
+.navbar-nav .dropdown-menu .nav-link[data-value="Ver Análise"]+.dropdown-menu .nav-link[data-value="Planilha Áreas Efetivo Manejo"],
+.navbar-nav .dropdown-menu .nav-link[data-value="Ver Análise"]+.dropdown-menu .nav-link[data-value="Planilha Inventário"] {
+        display: none !important;
+}
+ */
+#fileStatusAem,
+#fileStatusInventario {
+        margin: 0 auto;
+        width: fit-content;
+}
+
 img {
-        width: 1280;
-        height: 720;
+        width: 800px;
+        height: 600px;
+}
+/* Resumo do Inventário */
+pre {
+        margin: 0 auto;
+        width: fit-content;
+        margin-top: 30px;
+        font-size: 0.64em;
 }
 
 #fileStatusInventario {
         margin-top: 25px;
 }
 
-#fileStatusAem, #uploadAem-label, #uploadInventario-label, #fileStatusInventario {
+#fileStatusAem,
+#uploadAem-label,
+#uploadInventario-label,
+#fileStatusInventario {
         font-size: 19px;
 }
+
+/*Tabela Inventário*/
+tbody {
+        font-size: 0.76em;
+}
+.dataTables {
+        width: 100%;
+        margin: 0 auto;
+        scrollbar-color: rgba(78, 78, 77, 0.2);
+        overflow-x: scroll;
+        scrollbar-width: inherit;
+}
+/*
+@media only screen and (max-width: 600px) {
+        .navbar-brand {
+                display: none;
+        }
+}
+*/
+/*--------------------------------------------------------------
+# Desktop Navigation 
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Laptop Navigation 
+--------------------------------------------------------------*/
+@media (max-width: 1400px) {
+        /* Gráficos */
+        .col-sm-4 #plotType-label {
+                font-weight: bold;
+                text-transform: uppercase;
+        }
+
+        .col-sm-4 {
+                height: 100%;
+                display: inline-block;;
+                justify-content: center;
+                max-width: 100%;
+                position: relative;
+
+        }
+
+        div.radio {
+                /* display: inline-block; */
+                flex-direction: row;
+                justify-content: baseline;
+                flex-wrap: wrap;
+        }
+
+        input[type="radio"]:checked~span {
+                color: #eb4a6d;
+                font-style: italic;
+        }
+
+        .img-grafico {
+                margin-top: 18px;
+                display: flex;
+                justify-content: center;
+        }
+        /* Gráfico e Radio ocupar o mesmo espaço horizontalmente */
+        img {
+                flex: 1;
+                max-width: 100%;
+        }
+        /*Tabela Inventário*/
+        .dataTables {
+                width: 100%;
+                margin: 0 auto;
+                scrollbar-color: rgba(78, 78, 77, 0.2);
+                overflow-x: scroll;
+                scrollbar-width: inherit;
+        }
+}
+
+/*--------------------------------------------------------------
+# Mobile Navigation - Tablets
+--------------------------------------------------------------*/
+@media (max-width: 768px) {/* iPad Mini */
+        .dropdown:active {
+
+        }
+        /* Gráficos */
+        #plotType .shiny-options-group {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+                display: inline-block;
+                border: none;
+        }
+        form.well {
+                display: flex;
+                max-height: 180px;
+                border: none;
+        }
+        .col-sm-4 #plotType-label {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-top: 5px;
+        }
+        .col-sm-4 {
+                background-color: hsl(0, 5%, 89%, .3);
+                padding: 5px;
+                display: inline-block;
+                justify-content: center;
+                margin-top: 10px;
+                width: 100%; 
+                position: relative;
+                flex-wrap: wrap;
+        }
+        .radio {
+                display: inline-block;
+                flex-direction: row;
+                position: relative;
+                padding-right: 5px;
+        }
+        .shiny-bound-output img {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }              
+        /*Tabela Inventário*/
+        .dataTables_wrapper.no-footer {
+                max-width: 100%;
+                scrollbar-color: rgba(78, 78, 77, 0.2);
+                scrollbar-width: auto;
+        }
+        /* Resumo do Inventário */
+        pre {
+                margin: 0 auto;
+                max-width: 700px;
+                width: 100%;
+                margin-top: 30px;
+                font-size: 0.74em;
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: inherit;
+        }
+}
+/*
+@media (max-width: 1114px) {/* Galaxy Tab 57 (800px) iPad Pro 11 (834px) iPad Air 4 (820px) Microsoft Surface Duo (1114px)
+        /* Menu
+        nav li,
+        li.dropdown {
+                display: block;
+                justify-content: center;
+                justify-items: center;
+                width: 100%;
+                margin: 5px 0 !important;
+        }
+        body>nav>div>ul>li.dropdown.open>ul {
+                display: block !important;
+                justify-content: center;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li {
+                display: block;
+                font-size: 0.96em;
+                transition: all .5s ease-in;
+                margin: 5px 0 !important;
+                word-break: break-all !important;
+                justify-content: center;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li>a {
+                display: block;
+                font-size: 0.96em;
+                justify-content: center;
+        }
+        body>nav>div>ul>li.dropdown.open>ul>li>a:hover {
+                font-weight: bold;
+        }
+        /* Gráficos 
+        #plotType .shiny-options-group {
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+                display: inline-block;
+                border: none;
+        }
+        form.well {
+                display: flex;
+                max-height: 180px;
+                border: none;
+        }
+        .col-sm-4 #plotType-label {
+                font-weight: bold;
+                text-transform: uppercase;
+                margin-top: 5px;
+        }
+        .col-sm-4 {
+                background-color: hsl(0, 5%, 89%, .3);
+                padding: 5px;
+                display: inline-block;
+                justify-content: center;
+                margin-top: 10px;
+                width: 100%; 
+                position: relative;
+                flex-wrap: wrap;
+        }
+        .radio {
+                display: inline-block;
+                flex-direction: row;
+                position: relative;
+                padding-right: 5px;
+        }
+        .shiny-bound-output img {
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+        }              
+        /*Tabela Inventário
+        .dataTables_wrapper.no-footer {
+                max-width: 100%;
+                scrollbar-color: rgba(78, 78, 77, 0.2);
+                scrollbar-width: auto;
+        }
+        /* Resumo do Inventário 
+        pre {
+                margin: 0 auto;
+                max-width: 760px;
+                width: 100%;
+                margin-top: 30px;
+                font-size: 0.74em;
+                display: flex;
+                overflow-x: auto;
+                scrollbar-width: inherit;
+        }
+}
+*/

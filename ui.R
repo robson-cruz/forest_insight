@@ -3,9 +3,11 @@ library(shiny)
 
 shinyUI(
     navbarPage(
-        "Forest Insight v1.0.3 - Apuleia",
+        title = "Forest Insight v1.0.4 - Apuleia",
         lang = "pt-BR",
         tags$head(includeScript("google-analytics.js")),
+        tags$head(htmltools::htmlDependency("jquery", "3.6.0", src = "https://code.jquery.com/", script = "jquery-3.6.0.min.js")),
+        tags$head(includeScript("./www/js/script.js")), 
         tags$head(
             tags$meta(charset = "UTF-8"),
             tags$meta(name = "viewport", content = "width=device-width, initial-scale=1.0"),
@@ -15,13 +17,13 @@ shinyUI(
 
         ),
        tabPanel(
-           "Planilha Áreas de Efetivo Manejo",
+           "Planilha Áreas Efetivo Manejo",
            fileInput(inputId = "uploadAem", label = "Planilha Áreas de Efetivo Manejo"),
            actionButton(inputId = "uploadFileAem", label = "Fazer upload"),
            textOutput("fileStatusAem")
        ),
        tabPanel(
-           "Planilha do Inventário",
+           "Planilha Inventário",
            fileInput(inputId = "uploadInventario", label = "Planilha Inventário"),
            actionButton(inputId = "uploadFileInventario", "Fazer upload e Rodar Análise"),
            textOutput("fileStatusInventario")

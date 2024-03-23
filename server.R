@@ -31,6 +31,7 @@ source("./modules/list_of_species_to_harvest.R")
 source("./modules/summary_table.R")
 source("./modules/harvest_intensity.R")
 source("./modules/report_build.R")
+source("./modules/check_threatened_species_for_logging.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -81,8 +82,11 @@ process_data <- function() {
             summary_table(dataframe)
             logging_intensity(dataframe)
             
-            # Generate report using R Markdown
             incProgress(0.2, detail = 'Etapa 9 de 10')
+            check_threatened_species_for_logging(dataframe)
+            
+            # Generate report using R Markdown
+            incProgress(0.2, detail = 'Etapa 10 de 10')
             render_report()
 
             
@@ -180,7 +184,8 @@ function(input, output, session) {
                       rownames = FALSE,
                       options = list(
                           pageLength = 6,
-                          language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese.json')
+                          language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese.json'),
+                          scrollX = TRUE
                       ))
     })
 
@@ -192,66 +197,50 @@ function(input, output, session) {
     output$DBH_classes_plot <- renderImage({
         dbh_classes_chart(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
 
     }, deleteFile = FALSE)
 
     output$BoxPlot_DBH_by_ut_Plt <- renderImage({
         dbh_over_ut(dataframe)
         list(src = './output/Graficos/Distribuicao_Diametrica/Distribuicao_Dap_UT.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$basal_area_DBH_plt <- renderImage({
         basal_area_by_DBH(dataframe)
         list(src = './output/Graficos/Area_basal/Area_Basal_dap.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$basal_area_ut_plt <- renderImage({
         basal_area_ut(dataframe)
-        list(src = './output/Graficos/Area_basal/Area_Basal_ut.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+        list(src = './output/Graficos/Area_basal/Area_basal_UT.png',
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$harvest_dbh_plt <- renderImage({
         harvest_by_dbh_chart(dataframe)
         list(src = './output/Graficos/Selecao_Corte/Selecao_Corte_dap.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$qf_plot <- renderImage({
         qf_chart(dataframe)
         list(src = './output/Graficos/Qualidade_de_Fuste/Qualidade_de_Fuste.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$status_cutting_plot <- renderImage({
         eco_status_chart(dataframe)
         list(src = './output/Graficos/Selecao_Corte/Selecao_Status_Ecologico.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
 
     output$crit_10.15_plt <- renderImage({
         criterion_1015(dataframe)
         list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
-             contentType = 'image/png',
-             width = 1024,
-             height = 700)
+             contentType = 'image/png')
     }, deleteFile = FALSE)
     
     # Prepare the analysis to save

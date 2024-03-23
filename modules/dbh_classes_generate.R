@@ -23,18 +23,18 @@ dbh_classes_generate <- function(dataframe) {
 
         # Create a new column 'classe' based on DBH breaks
         dataframe$classe <- cut(dataframe$dap, breaks = limits, labels = labels, right = FALSE)
+        #dataframe$classe <- paste0(floor(dap / 10) * 10, "-", floor(dap / 10 ) * 10 + 10)
+        
         # Set 'classe' column as factor
         dataframe$classe <- factor(dataframe$classe, levels = labels, ordered = TRUE)
 
         # Create a new column 'classe2' based on DBH breaks (with >200 category)
         dataframe$classe2 <- ifelse(dataframe$dap > 200, ">200", as.character(dataframe$classe))
         dataframe$classe2 <- factor(dataframe$classe2, levels = labels2, ordered = TRUE)
-                # select(num_arvore, flona, umf, upa, ut, nome_cientifico, familia,
-                #        status, dispositivo_legal, nome_popular, cap, dap, classe,
-                #        classe2, altura, qf, g, volume, categoria, lat, lon, norte,
-                #        leste, zona_utm, mc, typo, isSynonym, nome_aceito, familia,
-                #        status_conservacao, dispositivo_legal, status, aem)
-
+        
+        # Create 'centro_classe' column
+        dataframe$centro_classe <- floor(dataframe$dap / 10) * 10 + 5
+        
         # Assign the local copy of the data frame to the R global environment
         assign('dataframe', dataframe, envir = .GlobalEnv)
 }
