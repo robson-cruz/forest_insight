@@ -1,112 +1,160 @@
-library(dplyr, warn.conflicts = FALSE)
-library(magrittr)
-
-
+#' @name horizontal_structure
+#' @title Compute ecological indices and generate a styled table for the top 10 species.
+#'
+#' @description
+#' This function computes various ecological indices, including density, dominance, and importance value index, for different species in a given dataset. It then generates a styled table presenting the top 10 species based on certain criteria.
+#'
+#' @param dataframe A data frame containing ecological data with specific columns.
+#' @return NULL. However, it generates a CSV file and a PNG image representing the top 10 species based on ecological indices.
+#' @export
+#' @import dplyr
+#' @import magrittr
+#' @importFrom gt gt gtsave tab_header cols_label cols_align cols_width tab_style fmt_number tab_options
+#' @examples
+#' # Load required libraries
+#' library(dplyr)
+#' library(gt)
+#'
+#' # Example usage
+#' # horizontal_structure(my_forest_inventory_data)
+#'
 horizontal_structure <- function(dataframe) {
-        ## Get some information from the data
-        umf <- paste0(unique(dataframe$umf))
-        upa <- paste0(unique(dataframe$upa))
-        flona <- paste0(unique(dataframe$flona))
-
-        fi_horiz <- dataframe %>%
-                group_by(nome_cientifico) %>%
-                count(nome_cientifico, ut, name = 'N') %>%
-                spread(key = ut, value = N) %>%
-
-                ## Count the occurrence of each specie per UT (plot)
-                row_count(count = NA) %>%
-                mutate(n_UT = sum(abs(rowcount - length(unique(dataframe$ut))))) %>%
-
-                ## Set absolute density
-                mutate(DA = n_UT / sum(aem$aem)) %>%
-
-                ## Set absolute frequency
-                mutate(FA = n_UT / length(unique(dataframe$ut))) %>%
-                select(-c(tidyr::matches('[0-9]')))
-
-
-        n_sp <- dataframe %>% group_by(nome_cientifico) %>% summarise(n = n())
-
-        fi_horiz %<>%
-                left_join(n_sp, by = 'nome_cientifico')
-
-        ## Set relative density
-        fi_horiz %<>%
-                select(n, n_UT, DA, FA) %>%
-                mutate(DR = DA / sum(fi_horiz$DA) * 100) %>%
-
-                ## Set relative frequency
-                mutate(FR = FA / sum(fi_horiz$FA) * 100)
-
-
-        ## Set basal area per specie
-        g_upa <- dataframe %>%
-                group_by(nome_cientifico) %>%
-                summarise(Gsp = sum(g))
-
-        fi_horiz %<>%
-                left_join(g_upa, by = 'nome_cientifico')
-
-        ## Set total basal area
-        FI_G <- dataframe %>%
-                select(nome_cientifico, g) %>%
-                summarize(SumG = sum(g))
-
-        ## Set Dominance (DO)
-        fi_horiz %<>%
-                mutate(DO = Gsp / sum(aem$aem)) %>%
-                mutate(DOR = (DO / (FI_G$SumG / sum(aem$aem)) * 100)) %>%
-
-                ## Set the Coverage Value (VC)
-                mutate(VC = DR + DOR) %>%
-                mutate(VCR = VC / 2) %>%
-
-                ## Set the Importance Value (VI)
-                mutate(VI = FR + DR + DOR)
-
-
-        fi_horiz %<>%
-                mutate(VIR = (VI / sum(fi_horiz$VI)) * 100)
-
-        # Get top 10 DOR
-        top_10_dor <- fi_horiz %>%
-                arrange(desc(DOR)) %>%
-                tibble::rowid_to_column(var = 'row_id') %>%
-                filter(row_id < 11)
-
-        sp_top_10 <- top_10_dor$nome_cientifico
-        dor_top_10 <- as.character(round(top_10_dor$DOR, 2))
-
-        for (i in seq_along(sp_top_10)) {
-                sp_top_10[i] <- paste0(sp_top_10[i], ' (', dor_top_10[i], '%)')
-        }
-
-        sp_top_txt <- glue::glue_collapse(sp_top_10, sep = ', ', last = ' e ')
-
-        write.table(
-                sp_top_txt,
-                file = paste0('./output/Top_10_sp_DOR', '_umf_', umf, '_upa_',
-                             upa, '_', flona, '.txt')[1],
-                quote = FALSE,
-                sep = ', ',
-                col.names = '10 espécies que apresentaram as maiores dominâncias relativas\n',
-                row.names = FALSE
-        )
-
-        file_name_horiz <- paste0(
-                './output/dataFrame/Horiz_Structure_', 'umf_', umf, '_upa_',
-                upa, '_', flona, '.csv'
-        )[1]
-
-        write.csv2(
-                fi_horiz,
-                file = file_name_horiz,
-                row.names = FALSE,
-                fileEncoding = 'latin1'
-        )
-
-
-        # Assign the local copy of df to the Global R Environment
-        assign('fi_horiz', fi_horiz, envir = .GlobalEnv)
-
+    
+    n_ut <- length(unique(dataframe$ut))
+    
+    # Set absolute density
+    df <- dataframe |>
+        dplyr::select(num_arvore, ut, aem, flona, umf, upa, nome_cientifico, dap, g, vol_geo) |>
+        dplyr::mutate(n.ha = 1 / (n_ut * aem)) |>
+        dplyr::mutate(G = g * n.ha, v.ha = vol_geo * n.ha)
+    
+    
+    # Set absolute and relative density
+    da <- df |>
+        dplyr::group_by(nome_cientifico) |>
+        dplyr::summarize(DA = sum(n.ha))
+    
+    dr <- da |>
+        dplyr::group_by(nome_cientifico) |>
+        dplyr::mutate(DR = DA / sum(da$DA) * 100)
+    
+    # Sampling unit where the species occurred
+    ui <- dataframe |>
+        dplyr::select(nome_cientifico, ut) |>
+        dplyr::group_by(nome_cientifico, ut) |>
+        dplyr::summarise(n = n()) |>
+        tidyr::spread(key = ut, value = n)
+    
+    ui$UI <- rowSums(!is.na(ui[, c(2:ncol(ui))]))
+    ui <- ui[, c(1, length(ui))]
+    
+    horiziontal_str <- merge(dr, ui)
+    
+    # Set absolute and relative frequency
+    horiziontal_str <- horiziontal_str |>
+        dplyr::mutate(FA = UI / n_ut * 100) |>
+        dplyr::select(-c(tidyr::matches('[0-9]')))
+    
+    sum_of_FA <- sum(horiziontal_str[, "FA"])
+    
+    horiziontal_str <- horiziontal_str |>
+        dplyr::mutate(FR = FA / sum_of_FA * 100)
+    
+    # Set Absolute and Relative Dominance
+    doa <- df |>
+        dplyr::group_by(nome_cientifico) |>
+        dplyr::summarize(DOA = sum(G))
+    
+    sum_of_doa <- sum(doa$DOA)
+    
+    horiziontal_str <- merge(horiziontal_str, doa)
+    
+    horiziontal_str <- horiziontal_str %>%
+        dplyr::mutate(DOR = DOA / sum_of_doa * 100) %>%
+        # Define the Importance Value Index
+        dplyr::mutate(VI = rowSums(dplyr::select(., c(DR, FR, DOR))) / 3) %>%
+        dplyr::mutate(VC = rowSums(dplyr::select(., c(DR, DOR))) / 2) %>%
+        dplyr::arrange(desc(VC))
+    
+    output_dir <- "output/Planilhas/"
+    if (!dir.exists(output_dir)) dir.create(output_dir)
+    
+    write.csv2(
+        horiziontal_str,
+        file = paste(output_dir, "Estrutura_Horizontal.csv"),
+        row.names = FALSE,
+        fileEncoding = "latin1"
+    )
+    
+    # Define a table
+    top10_basal_area <- horiziontal_str |>
+        dplyr::filter(row_number() <= 10)
+    
+    title_table <- paste(
+        "Tabela 3. Relação das 10 espécies que apresentaram maior volor de cobertura na área da UPA."
+    )
+    subtitle_table <- paste(
+        "Em que: DA = Densidade Absoluta; DR = Densidade Relativa; DOA = Dominância Absoluta; DOR = Dominância Relativa; VI = Valor de Importância; VC = Valor de Cobertura."
+    )
+    
+    top10_basal_area |>
+        dplyr::select(-c(UI, FA, FR)) |>
+        gt::gt() |>
+        gt::tab_header(
+            title = title_table,
+            subtitle = subtitle_table
+        ) |>
+        gt::cols_label(
+            nome_cientifico = "Espécie"
+        ) |>
+        gt::cols_align(align = "center") |>
+        gt::cols_width(
+            nome_cientifico ~ px(120),
+            everything() ~ px(50)
+        ) |>
+        gt::tab_style(
+            style = gt::cell_text(style = "italic"),
+            locations = gt::cells_body(columns = nome_cientifico)
+        ) |>
+        gt::fmt_number(
+            columns = c(-nome_cientifico),
+            decimals = 2,
+        ) |>
+        gt::tab_options(
+            #heading.title.font.size = px(14),
+            table.font.size = px(9)
+        ) |>
+        gt::tab_options(
+            table.font.size = px(9),
+            footnotes.multiline = FALSE,
+            data_row.padding = px(2),
+            grand_summary_row.padding = px(2),
+            heading.border.bottom.width = 2,
+            heading.border.bottom.color = "#000000",
+            # hide the top-most border
+            table.border.top.color = '#fff',
+            # change borders
+            summary_row.border.width = 2,
+            summary_row.border.color = "#000000",
+            grand_summary_row.border.width = 2,
+            grand_summary_row.border.color = "#000000",
+            column_labels.border.top.width = 2,
+            column_labels.border.top.color = "#000000",
+            column_labels.border.bottom.width = 2,
+            column_labels.border.bottom.color = "#000000",
+            # Change the vertical lines of summary body
+            stub.border.color = "#fff",
+            stub.background.color = "#fff",
+            stub_row_group.border.color = "#fff",
+            # Change the foot source body
+            footnotes.border.bottom.color = "#fff",
+            # change the bottom of the body
+            table_body.border.bottom.color = "#000000",
+            table_body.border.bottom.width = 2,
+            # hide the bottom-most line or footnotes
+            # will have a border
+            table.border.bottom.color = '#fff',
+            table.background.color = '#fff'
+        ) |>
+        gt::gtsave(filename = 'Tabela_3_Estrutura_Horizontal.png', path = './output/Tabelas/')
 }
