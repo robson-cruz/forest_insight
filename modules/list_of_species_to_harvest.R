@@ -110,8 +110,7 @@ commercial_species_table <- function(dataframe) {
         grand_summary_rows(
             columns = c(Explorar, Remanescente, Total),
             fns = list(id = "sum_id", label = md("**Total**"), fn = "sum"),
-            fmt = ~ fmt_integer(., use_seps = TRUE),
-            sep_mark = ".",
+            fmt = ~ fmt_integer(., use_seps = TRUE, sep_mark = ".", dec_mark = ","),
             missing_text = ""
         ) |>
         tab_style(
