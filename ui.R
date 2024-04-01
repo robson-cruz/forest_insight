@@ -3,7 +3,7 @@ library(shiny)
 
 shinyUI(
     navbarPage(
-        title = "Forest Insight v1.0.4 - Apuleia",
+        title = "Forest Insight v1.0.5 - Apuleia",
         lang = "pt-BR",
         tags$head(includeScript("google-analytics.js")),
         tags$head(htmltools::htmlDependency("jquery", "3.6.0", src = "https://code.jquery.com/", script = "jquery-3.6.0.min.js")),
