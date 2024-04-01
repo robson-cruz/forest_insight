@@ -91,10 +91,7 @@ commercial_species_table <- function(dataframe) {
     # Create the table
     table |>
         gt(rowname_col = "n") |>
-        tab_stubhead(label = "n") |>
-        cols_label(
-            nome_cientifico = md("Espécie")
-        ) |>
+        tab_stubhead(label = "#") |>
         tab_style(
             style = cell_text(align = "center"),
             locations = list(cells_stubhead(), cells_stub())
@@ -110,12 +107,23 @@ commercial_species_table <- function(dataframe) {
         grand_summary_rows(
             columns = c(Explorar, Remanescente, Total),
             fns = list(id = "sum_id", label = md("**Total**"), fn = "sum"),
-            fmt = ~ fmt_integer(., use_seps = TRUE, sep_mark = ".", dec_mark = ","),
+            fmt = ~ fmt_integer(., use_seps = TRUE, sep_mark = "."),
             missing_text = ""
+        ) |>
+        cols_label(
+            nome_cientifico = md("**Espécie**"),
+            Explorar = md("**Explorar**"),
+            Remanescente = md("**Remanescente**"),
+            Total = md("**Total**")
+            
         ) |>
         tab_style(
             style = cell_text(style = "italic"),
             locations = cells_body(columns = nome_cientifico)
+        ) |>
+        tab_style(
+            style = cell_text(weight = "bold"),
+            locations = cells_grand_summary()
         ) |>
         tab_style(
             style = list(
