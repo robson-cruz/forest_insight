@@ -34,6 +34,7 @@ source("./modules/report_build.R")
 source("./modules/check_threatened_species_for_logging.R")
 source("./modules/check_dbh_cut_great200.R")
 source("./modules/horizontal_structure.R")
+source("./modules/basal_area_harvest_table.R")
 
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
@@ -88,6 +89,7 @@ process_data <- function() {
             check_threatened_species_for_logging(dataframe)
             dbh_gt200(dataframe)
             horizontal_structure(dataframe)
+            basal_area_table(dataframe)
             
             # Generate report using R Markdown
             incProgress(0.2, detail = 'Etapa 10 de 10')
