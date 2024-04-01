@@ -3,14 +3,14 @@
 #' @title Descriptive statistics by `ut`
 #'
 #' @description This function receives a data frame with the columns `ut`, `dap`, `g`,
-#' `altura`, and `vol_geo` and makes descriptive statistics of these columns
+#' `altura`, and `volume` and makes descriptive statistics of these columns
 #' grouped by the "ut" column.
 #'
 #' @param dataframe - Forest inventory data frame with columns `ut`, `dap`, `g`,
-#' `altura`, and `vol_geo`
+#' `altura`, and `volume`
 #'
 #' @return A data frame object containing the summary statistics of columns `dap`, `g`,
-#' `altura`, and `vol_geo`, grouped by the `ut` column.
+#' `altura`, and `volume`, grouped by the `ut` column.
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -38,10 +38,10 @@ stat_ut <- function(dataframe) {
         altura_max = max(altura),
         altura_media = mean(altura),
         altura_desvio_padrao = sd(altura),
-        Volume_min = min(vol_geo),
-        Volume_max = max(vol_geo),
-        Volume_medio = mean(vol_geo),
-        Volume_desvio_padrao = sd(vol_geo)
+        Volume_min = min(volume),
+        Volume_max = max(volume),
+        Volume_medio = mean(volume),
+        Volume_desvio_padrao = sd(volume)
     ) %>%
         rename_with(~ tools::toTitleCase((gsub("_", " ", .x, fixed = TRUE)))) %>%
         rename(ut = Ut) %>%
