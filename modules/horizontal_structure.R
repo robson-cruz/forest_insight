@@ -24,9 +24,9 @@ horizontal_structure <- function(dataframe) {
     
     # Set absolute density
     df <- dataframe |>
-        dplyr::select(num_arvore, ut, aem, flona, umf, upa, nome_cientifico, dap, g, vol_geo) |>
+        dplyr::select(num_arvore, ut, aem, flona, umf, upa, nome_cientifico, dap, g, volume) |>
         dplyr::mutate(n.ha = 1 / (n_ut * aem)) |>
-        dplyr::mutate(G = g * n.ha, v.ha = vol_geo * n.ha)
+        dplyr::mutate(G = g * n.ha, v.ha = volume * n.ha)
     
     
     # Set absolute and relative density
