@@ -27,7 +27,7 @@ logging_intensity <- function(dataframe) {
     # Calculate total volume of logging
     volume_upa <- dataframe |>
         filter(categoria2 == "Explorar") |>
-        summarize(sum_volume = sum(vol_geo))
+        summarize(sum_volume = sum(volume))
     
     # Calculate total area
     area_upa <- dataframe |>
