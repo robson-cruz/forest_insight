@@ -47,15 +47,14 @@ process_data <- function() {
         detail = 'Isso pode demorar um pouco...',
         value = 0, {
             # Update the value parameter to indicate progress (0 to 10)
-            incProgress(0.2, detail = 'Etapa 1 de 10')
+            incProgress(0.1, detail = 'Etapa 1 de 10')
             # Perform data processing steps here
-            dataframe <- usr_data |>
-                left_join(aem, by = 'ut')
-
+            dataframe <<- usr_data |>
+                dplyr::left_join(aem, by = 'ut')
+            
+            incProgress(0.1, detail = 'Etapa 2 de 10')
             drop_duplicated_rows(dataframe)
             dbh_classes_generate(dataframe)
-
-            incProgress(0.1, detail = 'Etapa 2 de 10')
             scientific_name_clean(dataframe)
 
             incProgress(0.2, detail = 'Etapa 3 de 10')
