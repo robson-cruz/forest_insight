@@ -36,7 +36,7 @@ eco_status_chart <- function(dataframe) {
             width = 0.70
         ) +
         geom_text(
-            aes(label = scales::percent(..count.. / sum(..count..))),
+            aes(label = scales::percent(round(..count.. / sum(..count..),3))),
             stat = "count",
             vjust = -0.5,
             position = position_dodge2(width = 0.7),
