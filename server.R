@@ -7,7 +7,8 @@ library(pagedown)
 library(curl)
 library(rmarkdown)
 library(tinytex)
-
+library(gt)
+library(dplyr)
 
 # Source script
 source("global.R")
