@@ -92,8 +92,8 @@ criterion_1015 <- function(dataframe) {
 
     png(
         paste0(output_dir_plt, 'Criterio_10_a_15_Porcento', '.png'),
-        width = 6,
-        height = 4,
+        width = 7,
+        height = 6,
         units = "in",
         res = 300
     )

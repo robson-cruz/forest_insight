@@ -34,7 +34,7 @@ summary_table <- function(dataframe) {
         dap = as.vector(summary(dataframe$dap)),
         g = as.vector(summary(dataframe$g)),
         altura = as.vector(summary(dataframe$altura)),
-        vol_geo = as.vector(summary(dataframe$vol_geo)),
+        volume = as.vector(summary(dataframe$volume)),
         row.names = c("Mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Máximo")
     ) |>
         tibble::rownames_to_column(var = "Estatistica")
@@ -51,7 +51,7 @@ summary_table <- function(dataframe) {
             dap = md("**DAP (cm)**"),
             g = md("**g (m2)**"),
             altura = md("**Altura (m)**"),
-            vol_geo = md("**Volume (m3)**")
+            volume = md("**Volume (m3)**")
         ) |>
         cols_width(
             Estatistica ~ px(60),

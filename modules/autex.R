@@ -7,7 +7,7 @@
 #' named `"output/Planilhas/"`.
 #'
 #' @param dataframe with columns `nome_cientifico``, `nome_popular``, `status``,
-#' `categoria` and `vol_geo`.
+#' `categoria` and `volume`.
 #'
 #' @import dplyr
 #' @import tools
@@ -17,11 +17,11 @@ library(dplyr)
 
 autex_generate <- function(dataframe) {
     autex <- dataframe %>%
-        select(nome_cientifico, nome_popular, status_conservacao, categoria2, vol_geo) %>%
+        select(nome_cientifico, nome_popular, status_conservacao, categoria2, volume) %>%
         filter(categoria2 == "Explorar") %>%
         group_by(nome_cientifico) %>%
         mutate(numero_árvores = sum(categoria2 == "Explorar"),
-               volume_autorizado = sum(vol_geo)) %>%
+               volume_autorizado = sum(volume)) %>%
         group_by(nome_cientifico, categoria2) %>%
         ungroup() %>%
         # By default, mutate() keeps all columns from the input data
