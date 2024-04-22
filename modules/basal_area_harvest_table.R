@@ -23,8 +23,14 @@ basal_area_table <- function(dataframe) {
         dplyr::mutate(`g Total` = `g Corte` + `g Remanescente`) |>
         dplyr::select(`g Total`, `g Corte`, `g Remanescente`)
         
-        output_dir <- "output/"
+    sum_of_g <- sum(df$`g Total`)
+    df <- df |>
+        dplyr::mutate(`% Corte` = `g Corte` / sum_of_g * 100)
+    
+        output_dir <- "output/Planilhas/"
+        output_dir_basal_area <- "output/Corte_Area_Basal/"
         if (!dir.exists(output_dir)) dir.create(output_dir)
+        if (!dir.exists(output_dir_basal_area)) dir.create(output_dir_basal_area)
         
         write.csv2(
             df,
@@ -34,15 +40,24 @@ basal_area_table <- function(dataframe) {
         )
         
         # Define a table
-        sum_of_g <- sum(df$`g Total`)
-        
         table <- df |>
-            dplyr::mutate(`% Corte` = `g Corte` / sum_of_g * 100) |>
             dplyr::filter(`g Corte` > 0) |>
             dplyr::arrange(desc(`% Corte`)) |>
             tibble::rowid_to_column(var = "n") |>
             dplyr::filter(n <= 10)
-            
+        
+        output_text <- paste0(
+            "A proposta do presente POA é remoção de ", round(sum(df$`% Corte`), 1),
+            "% da área basal disponível nas espécies que atendem ao critério de seleção para corte, sendo que a remoção de área basal será mais intensa nas espécies ", glue::glue_collapse(sort(table$nome_cientifico), sep = ", ", last = " e "),
+            ". A remoção da área basal destas espécies representa ", round(sum(table$`% Corte`), 1), "% da área basal a ser removida na UPA",
+            ". A maioria destas espécies está entre as que apresentaram a maior dominância na UPA."
+        )
+        
+        writeLines(
+            output_text,
+            con = paste0(output_dir_basal_area, "Corte_Area_Basal.txt")
+        )
+        
         title_table <- paste(
             "Tabela 4. Relação das 10 espécies que receberão maior intervenção de corte em área basal."
         )
@@ -53,7 +68,7 @@ basal_area_table <- function(dataframe) {
         table |> 
             dplyr::as_tibble() |>
             dplyr::select(c(2:6)) |>
-            gt::gt(rownames_to_stub = T) |>
+            gt::gt(rownames_to_stub = TRUE) |>
             gt::tab_stubhead(label = "#") |>
             gt::tab_header(
                 title = title_table,
@@ -86,6 +101,10 @@ basal_area_table <- function(dataframe) {
                 columns = -c(nome_cientifico),
                 decimals = 2,
             ) |>
+            gt::cols_width(
+                everything() ~ px(100),
+                nome_cientifico ~ px(140)
+            ) |>
             tab_style(
                 style = cell_text(weight = "bold"),
                 locations = cells_grand_summary()
@@ -110,7 +129,6 @@ basal_area_table <- function(dataframe) {
                 table.font.size = px(9)
             ) |>
             gt::tab_options(
-                table.font.size = px(9),
                 footnotes.multiline = FALSE,
                 data_row.padding = px(2),
                 grand_summary_row.padding = px(2),
@@ -144,6 +162,6 @@ basal_area_table <- function(dataframe) {
             ) |>
             gt::gtsave(
                 filename = 'Tabela_4_Top_10_Espedcies_Area_Basal_Corte.png',
-                path = './output/Tabelas/'
+                path = 'output/Tabelas/'
             )
 }
