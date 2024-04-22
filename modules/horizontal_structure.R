@@ -24,7 +24,7 @@ horizontal_structure <- function(dataframe) {
     
     # Set absolute density
     df <- dataframe |>
-        dplyr::select(num_arvore, ut, aem, flona, umf, upa, nome_cientifico, dap, g, volume) |>
+        dplyr::select(ut, aem, nome_cientifico, g, volume) |>
         dplyr::mutate(n.ha = 1 / (n_ut * aem)) |>
         dplyr::mutate(G = g * n.ha, v.ha = volume * n.ha)
     
@@ -156,5 +156,5 @@ horizontal_structure <- function(dataframe) {
             table.border.bottom.color = '#fff',
             table.background.color = '#fff'
         ) |>
-        gt::gtsave(filename = 'Tabela_3_Estrutura_Horizontal.png', path = './output/Tabelas/')
+        gt::gtsave(filename = 'Tabela_3_Estrutura_Horizontal.png', path = 'output/Tabelas/')
 }
