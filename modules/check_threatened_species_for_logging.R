@@ -44,6 +44,7 @@ check_threatened_species_for_logging <- function(dataframe) {
     df <- dataframe[check_1 & check_2 | check_3 | check_4, ]
     
     df_output <- df[df$categoria2 == "Explorar", ]
+    df_output <- df_output |> tidyr::drop_na()
     
     if (nrow(df_output) > 0) {
         issue_dir <- './output/Pendencias/'
