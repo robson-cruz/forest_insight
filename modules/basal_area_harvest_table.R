@@ -50,7 +50,7 @@ basal_area_table <- function(dataframe) {
             "A proposta do presente POA é remoção de ", round(sum(df$`% Corte`), 1),
             "% da área basal disponível nas espécies que atendem ao critério de seleção para corte, sendo que a remoção de área basal será mais intensa nas espécies ", glue::glue_collapse(sort(table$nome_cientifico), sep = ", ", last = " e "),
             ". A remoção da área basal destas espécies representa ", round(sum(table$`% Corte`), 1), "% da área basal a ser removida na UPA",
-            ". A maioria destas espécies está entre as que apresentaram a maior dominância na UPA."
+            ". A maioria destas espécies está entre as que apresentaram as maiores dominâncias na UPA."
         )
         
         writeLines(
