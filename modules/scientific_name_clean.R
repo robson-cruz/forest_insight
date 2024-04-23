@@ -41,7 +41,7 @@ scientific_name_clean <- function(dataframe) {
         filter(lista %in% c('Lista Flora Ameaçada Pará', 'Lista Portaria 443')) %>%
         select(-c(1, 4, 5, 6, 8)) %>%
         group_by(nome_cientifico, status_conservacao) %>%
-        summarise(dispositivo_legal = paste(dispositivo_legal, collapse = ", "))
+        summarise(dispositivo_legal = paste(unique(dispositivo_legal), collapse = ", "))
 
     # Read "reflora" data set to get specie geographic distribution
     # reflora <- readr::read_csv2(
