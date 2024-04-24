@@ -3,7 +3,7 @@ name: Close Issue on Commit
 on:
   push:
     branches:
-      - main
+      - main		
     pull_request_target:
       types:
         - closed
@@ -11,55 +11,20 @@ on:
       - cron: '0 */4 * * *'
   
 jobs:
-  lock:
+  close_issue:
     runs-on: ubuntu-latest
-    
-    permissions:
-      issues: write
-
     steps:
-      - name: Close Issue Action
-        uses: peter-evans/close-issue@v3
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository: ${{ github.repository }}
-          close-reason: completed
-
       - name: Close Issue
         id: close_issue
         run: |
-          # Gets the list of commit messages
-          COMMIT_MESSAGES=$(git log --pretty=%B)
-        
-          # Search for issue numbers in the commit message
-          ISSUE_NUMBERS=$(echo "$COMMIT_MESSAGES" | grep -oE '#[0-9]+' | grep -oE '[0-9]+')
-        
-          # Closes issues found in commits
-          for ISSUE_NUMBER in $ISSUE_NUMBERS; do
-            echo "Closing issue #$ISSUE_NUMBER"
-            # Verifies if the issue number is empty
-            if [ -z "$ISSUE_NUMBER" ]; then
-              echo "Empty issue number. Skipping."
-              continue
-            fi
+          # Extrai o número da issue da mensagem de commit
+          ISSUE_NUMBER=$(git log --pretty=%B | grep -oE '#[0-9]+' | grep -oE '[0-9]+' | head -n 1)
           
-            # Close issues
-            # Close the issue using the issue number
-            gh issue close "robson-cruz/forest_insight" --issue $ISSUE_NUMBER --reason "completed"
-          done
-            #curl -X PATCH \
-              #-H "Accept: application/vnd.github.v3+json" \
-              #-H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
-              #-H "Content-Type: application/json" \
-              #https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER \
-              #-d '{"state":"closed"}'
-              
-            # Optionally, add labels after closing the issue
-            #curl -X POST \
-              #-H "Accept: application/vnd.github.v3+json" \
-              #-H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
-              #-H "Content-Type: application/json" \
-              #https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER/labels \
-              #-d '{"labels":["✔️"]}'
-          #done
-          """
+          # Verifica se o número da issue está vazio
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "Nenhum número de issue encontrado na mensagem do commit. Não é possível fechar a issue."
+            exit 1
+          fi
+          
+          # Fecha a issue usando o número da issue
+          gh issue close "robson-cruz/forest_insight" --issue $ISSUE_NUMBER --reason "completed"
