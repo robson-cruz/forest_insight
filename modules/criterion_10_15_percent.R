@@ -25,10 +25,9 @@ library(ggplot2)
 
 criterion_1015 <- function(dataframe) {
     crit_10.15 <- dataframe %>%
-        filter(dap >= 50 & as.numeric(as.factor(qf)) <= 2) %>%
+        filter(dap >= 50 & as.numeric(qf) <= 2) %>%
         select(nome_cientifico, categoria2, status_conservacao, aem) %>%
         group_by(nome_cientifico) %>%
-        # mutate(categoria2 = as.numeric(as.factor(categoria2))) %>%
         mutate(
             Corte = sum(categoria2 == 'Explorar'),
             Remanescente = sum(categoria2 == 'Remanescente'),
