@@ -112,7 +112,7 @@ commercial_species_table <- function(dataframe) {
         ) |>
         cols_label(
             nome_cientifico = md("**Espécie**"),
-            Explorar = md("**Explorar**"),
+            Explorar = md("**Corte**"),
             Remanescente = md("**Remanescente**"),
             Total = md("**Total**")
             
