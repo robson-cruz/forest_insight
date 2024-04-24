@@ -30,10 +30,10 @@ setUploadedData <- function(data) {
         # Geometric volume
         mutate(vol_geo = g * altura * 0.7) %>%
         # Define 'qf' column as a factor
-        mutate(qf = factor(qf, levels = unique(qf))) %>%
+        mutate(qf = factor(qf)) %>%
         # Define 'Categoria2' column
         mutate(categoria2 = if_else(categoria == "Substituta", "Remanescente", categoria)) %>%
-        mutate(categoria2 = factor(categoria2, levels = unique(categoria2)))
+        mutate(categoria2 = factor(categoria2))
 
     assign("usr_data", usr_data, inherits = TRUE, envir = .GlobalEnv)
 }
