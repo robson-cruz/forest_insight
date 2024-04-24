@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Close Issue Action
         uses: peter-evans/close-issue@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          close-reason: completed
 
       - name: Close Issue
         id: close_issue
