@@ -21,7 +21,7 @@ library(dplyr, warn.conflicts = FALSE)
 
 crit_34 <- function(dataframe) {
     crit_3.4 <- dataframe %>%
-        filter(dap >= 50 & as.numeric(as.character(qf)) <= 2) %>%
+        filter(dap >= 50, as.numeric(qf) <= 2) %>%
         select(ut, nome_cientifico, categoria2, status_conservacao, aem) %>%
         group_by(ut, nome_cientifico) %>%
         mutate(
