@@ -13,10 +13,15 @@
 #' each 'ut'.
 #'
 dbh_over_ut <- function(dataframe) {
+    output_dir_plt <- "./output/Graficos/Distribuicao_Diametrica/"
+    if (!dir.exists(output_dir_plt)) {
+        dir.create(output_dir_plt, recursive = TRUE)
+    }
+    
     # Open the graphic devices to save the box plot
     png(
-        paste0('./output/Graficos/Distribuicao_Diametrica/',
-               'Distribuicao_Dap_UT', '.png'),
+        paste0(output_dir_plt,
+               "Distribuicao_Dap_UT", ".png"),
         width = 6,
         height = 4,
         units = 'in',
@@ -26,13 +31,15 @@ dbh_over_ut <- function(dataframe) {
     # Set the chart
     BoxPlot_DBH_by_Plt <- dataframe %>%  # DBH Classes Box plot
         ggplot(aes(x = as.factor(ut), y = dap)) +
-        geom_violin(aes(color = as.factor(ut), alpha = 0.8)) +
-        scale_fill_brewer(palette = 'Paired') +
-        geom_boxplot(width = 0.3, outlier.size = -1) +
+        #geom_violin(aes(color = as.factor(ut), alpha = 0.8)) +
+        geom_boxplot(outlier.size = 0.7, staplewidth = 0.5) +
+        #scale_fill_brewer(palette = 'Paired') +
+        #geom_boxplot(width = 0.3, outlier.size = -1) +
         labs(
             title = 'Distribuição da Variável DAP por UT',
             x = 'UT', y = 'DAP (cm)'
         ) +
+       # scale_y_continuous(breaks =  seq(0, 600, 50))
         theme(
             legend.position = 'none',
             plot.title = element_text(hjust = 0.5, size = 10),
