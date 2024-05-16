@@ -37,14 +37,14 @@ harvest_by_dbh_chart <- function(dataframe) {
     species_to_harvest <- dataframe %>%
         filter(dap >= 50) %>%
         filter(classificacao == "Comercial") %>%
-        select(nome_cientifico, dap, categoria2, classe) %>%
-        group_by(classe, categoria2) %>%
+        select(nome_cientifico, dap, categoria2, classe2) %>%
+        group_by(classe2, categoria2) %>%
         summarize(N = n())
     
     dbh_to_harvest <- dataframe %>%
         filter(dap >= 50) %>%
         filter(classificacao == "Comercial") %>%
-        count(classe, name = "N") %>%
+        count(classe2, name = "N") %>%
         mutate(categoria2 = "Total")
     
     harvest_data <- bind_rows(species_to_harvest, dbh_to_harvest)
@@ -59,7 +59,7 @@ harvest_by_dbh_chart <- function(dataframe) {
         res = 300)
     
     harvest_plot <- harvest_data %>%
-        ggplot(aes(x = classe, y = N, group = categoria2)) +
+        ggplot(aes(x = classe2, y = N, group = categoria2)) +
         geom_bar(stat = "identity", position = "dodge", aes(fill = categoria2)) +
         theme(
             plot.title = element_text(color = "#000000", size = 10, hjust = 0.5),
