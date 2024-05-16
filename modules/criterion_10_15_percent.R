@@ -136,8 +136,8 @@ criterion_1015 <- function(dataframe) {
 
         geom_text(
             aes(x = nome_cientifico, y = PercRem, label = paste0(PercRem, '%')),
-            color = '#5D3587',
-            size = 1.6,
+            color = '#000000',
+            size = 2,
             hjust = ifelse(data2plt$PercRem <= min(data2plt$PercRem), 1.6, -0.2),
             nudge_y = 1
         ) +
@@ -188,7 +188,7 @@ criterion_1015 <- function(dataframe) {
                                        face = 'italic',
                                        color = ifelse(data2plt$Análise == "Nao Atende",
                                                       "red", "black")),
-            plot.caption = element_text(size = 7, face = 'italic'),
+            plot.caption = element_text(size = 7, face = 'italic', hjust = 0.5),
             legend.position = 'bottom',
             legend.title = element_text(size = 7),
             legend.text = element_text(size = 7),
