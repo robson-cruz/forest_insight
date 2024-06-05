@@ -40,7 +40,7 @@ dbh_classes_chart <- function(dataframe, threshold = 40) {
             scale_y_continuous(labels = scales::label_number(big.mark = '.')) +
             theme(
                     axis.text.x = element_text(angle = 50, size = 7),
-                    axis.text.y = element_text(size = 7),
+                    axis.text.y = element_text(size = 7, angle = 90, hjust = 0.5),
                     axis.title.x = element_text(size = 9),
                     axis.title.y = element_text(size = 9),
                     plot.title = element_text(hjust = 0.5, size = 10)

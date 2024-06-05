@@ -44,7 +44,7 @@ qf_chart <- function(dataframe) {
         ) +
         theme(
             #axis.text.x = element_text(angle = 50, size = 7),
-            axis.text.y = element_text(size = 7),
+            axis.text.y = element_text(angle = 90, size = 7, hjust = 0.5),
             axis.title.x = element_text(size = 9),
             axis.title.y = element_text(size = 9),
             plot.title = element_text(hjust = 0.5, size = 10),
