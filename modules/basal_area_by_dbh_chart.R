@@ -46,7 +46,6 @@ basal_area_by_DBH <- function(df) {
                 size = 10,
                 hjust = 0.5),
             axis.text.x = element_text(angle = 50, size = 8),
-            axis.text.y = element_text(angle = 90, size = 7, hjust = 0.5),
             axis.title.x = element_text(color = 'black', size = 9),
             axis.title.y = element_text(color = 'black', size = 9),
             legend.text = element_text(size = 7),
