@@ -43,12 +43,11 @@ eco_status_chart <- function(dataframe) {
             size = 2.8
         ) +
         theme(
-            #axis.text.x = element_text(angle = 50, size = 7),
-            axis.text.y = element_text(size = 7),
-            axis.title.x = element_text(size = 9),
-            axis.title.y = element_text(size = 9),
-            plot.title = element_text(hjust = 0.5, size = 10),
-            legend.title = element_text(size = 9),
+            axis.text.x = element_text(size = 7),
+            axis.text.y = element_text(size = 7, angle = 90, hjust = 0.5),
+            axis.title.y = element_text(size = 7),
+            plot.title = element_text(hjust = 0.5, size = 9),
+            legend.title = element_text(size = 7),
             legend.position = 'bottom'
         ) +
         labs(
