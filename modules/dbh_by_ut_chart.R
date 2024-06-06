@@ -39,14 +39,14 @@ dbh_over_ut <- function(dataframe) {
             title = 'Distribuição da Variável DAP por UT',
             x = 'UT', y = 'DAP (cm)'
         ) +
-       # scale_y_continuous(breaks =  seq(0, 600, 50))
+       scale_y_continuous(breaks =  seq(0, 600, 50)) +
         theme(
             legend.position = 'none',
-            plot.title = element_text(hjust = 0.5, size = 10),
-            axis.title.x = element_text(size = 9),
-            axis.title.y = element_text(size = 9),
+            plot.title = element_text(hjust = 0.5, size = 9),
+            axis.title.x = element_text(size = 7),
+            axis.title.y = element_text(size = 7),
             axis.text.x = element_text(size = 7),
-            axis.text.y = element_text(size = 7)
+            axis.text.y = element_text(size = 7, angle = 90, hjust = 0.5)
         )
 
     # Close the graphic devices and returns the plot
