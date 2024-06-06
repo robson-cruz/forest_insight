@@ -37,6 +37,7 @@ source("./modules/check_dbh_cut_great200.R")
 source("./modules/horizontal_structure.R")
 source("./modules/basal_area_harvest_table.R")
 
+options(shiny.maxRequestSize = 30*1024^2)
 
 inventario_modelo <- read.csv2("./data/input_data.csv")
 aem_modelo <- read.csv2("./data/aem.csv")
@@ -52,7 +53,7 @@ process_data <- function() {
             # Perform data processing steps here
             dataframe <<- usr_data |>
                 dplyr::left_join(aem, by = 'ut')
-            
+
             incProgress(0.1, detail = 'Etapa 2 de 10')
             drop_duplicated_rows(dataframe)
             dbh_classes_generate(dataframe)
@@ -79,22 +80,22 @@ process_data <- function() {
             incProgress(0.2, detail = 'Etapa 7 de 10')
             basal_area_ut(dataframe)
             eco_status_chart(dataframe)
-            
+
             incProgress(0.2, detail = 'Etapa 8 de 10')
             commercial_species_table(dataframe)
             summary_table(dataframe)
             logging_intensity(dataframe)
-            
+
             incProgress(0.2, detail = 'Etapa 9 de 10')
             check_threatened_species_for_logging(dataframe)
             dbh_gt200(dataframe)
             horizontal_structure(dataframe)
             basal_area_table(dataframe)
-            
+
             # Generate report using R Markdown
             incProgress(0.2, detail = 'Etapa 10 de 10')
             render_report()
-            
+
             # Final step
             incProgress(1, detail = 'Análise Finalizada!')
 
@@ -106,7 +107,7 @@ process_data <- function() {
 
 # Define server function
 function(input, output, session) {
-    
+
     observe({
         if (!is.null(input$uploadAem)) {
             tryCatch({
@@ -143,18 +144,18 @@ function(input, output, session) {
             }
         })
     })
-    
+
     if (identical(Sys.getenv("R_CONFIG_ACTIVE"), "shinyapps")) {
         chromote::set_default_chromote_object(
             chromote::Chromote$new(chromote::Chrome$new(
-                args = c("--disable-gpu", 
-                         "--no-sandbox", 
+                args = c("--disable-gpu",
+                         "--no-sandbox",
                          "--disable-dev-shm-usage",
                          c("--force-color-profile", "srgb"))
             ))
         )
     }
-    
+
     output$downloadScreenshot <- downloadHandler(
         filename = function() {
             paste("screenshot-", Sys.Date(), ".png", sep = "")
@@ -163,7 +164,7 @@ function(input, output, session) {
             webshot2::webshot("https://github.com/rstudio/shiny", file)
         }
     )
-    
+
     observeEvent(input$uploadFileInventario, {
         output$fileStatusInventario <- renderText({
             if (!is.null(usr_data)) {
@@ -247,7 +248,7 @@ function(input, output, session) {
         list(src = './output/Graficos/Criterio_10_a_15_Porcento/Criterio_10_a_15_Porcento.png',
              contentType = 'image/png')
     }, deleteFile = FALSE)
-    
+
     # Prepare the analysis to save
     output$DownloadDataAnalysis <- downloadHandler(
         filename = function() {
@@ -259,7 +260,7 @@ function(input, output, session) {
             write.csv2(dataframe, df_file,
                        row.names = FALSE,
                        fileEncoding = 'latin1')
-            
+
             # List files and zip them
             files_to_zip = list.files("./output/",
                                       recursive = TRUE,
