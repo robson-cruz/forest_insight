@@ -43,13 +43,14 @@ basal_area_by_DBH <- function(df) {
         theme(
             plot.title = element_text(
                 color = 'black',
-                size = 10,
+                size = 9,
                 hjust = 0.5),
-            axis.text.x = element_text(angle = 50, size = 8),
-            axis.title.x = element_text(color = 'black', size = 9),
-            axis.title.y = element_text(color = 'black', size = 9),
+            axis.text.x = element_text(angle = 50, size = 7),
+            axis.text.y = element_text(angle = 90, size = 7, hjust = 0.5),
+            axis.title.x = element_text(color = 'black', size = 8),
+            axis.title.y = element_text(color = 'black', size = 8),
             legend.text = element_text(size = 7),
-            legend.title = element_text(size = 7),
+            legend.title = element_text(size = 7, vjust = 0.75),
             legend.position = 'bottom'
         ) +
         labs(title = 'Área Basal por Classe de DAP',
