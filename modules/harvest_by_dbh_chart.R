@@ -62,11 +62,11 @@ harvest_by_dbh_chart <- function(dataframe) {
         ggplot(aes(x = classe2, y = N, group = categoria2)) +
         geom_bar(stat = "identity", position = "dodge", aes(fill = categoria2)) +
         theme(
-            plot.title = element_text(color = "#000000", size = 10, hjust = 0.5),
+            plot.title = element_text(color = "#000000", size = 9, hjust = 0.5),
             axis.text.x = element_text(angle = 50, size = 7),
             axis.text.y = element_text(angle = 90, size = 7, hjust = 0.5),
-            axis.title.x = element_text(size = 9),
-            axis.title.y = element_text(size = 9),
+            axis.title.x = element_text(size = 7),
+            axis.title.y = element_text(size = 7),
             legend.title = element_text(size = 7),
             legend.text = element_text(size = 7),
             legend.key.height = unit(4, "mm"),
@@ -75,7 +75,7 @@ harvest_by_dbh_chart <- function(dataframe) {
         ) +
         labs(
             title = "Seleção de Árvores",
-            x = "DAP (cm)",
+            x = "Classe DAP (cm)",
             y = "Número de Árvores",
             fill = "Seleção:"
         )
