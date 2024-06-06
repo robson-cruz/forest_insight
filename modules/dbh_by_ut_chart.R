@@ -44,7 +44,7 @@ dbh_over_ut <- function(dataframe) {
             legend.position = 'none',
             plot.title = element_text(hjust = 0.5, size = 10),
             axis.title.x = element_text(size = 9),
-            axis.title.y = element_text(size = 9, angle = 90, hjust = 0.5),
+            axis.title.y = element_text(size = 9),
             axis.text.x = element_text(size = 7),
             axis.text.y = element_text(size = 7)
         )
