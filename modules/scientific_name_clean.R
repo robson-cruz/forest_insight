@@ -26,23 +26,6 @@ library(dplyr, warn.conflicts = FALSE)
 
 
 scientific_name_clean <- function(dataframe) {
-    # Basic data cleaning
-    dataframe %<>%
-        # remove extra white space between genus and epithet
-        mutate(nome_cientifico = str_squish(nome_cientifico),
-
-               # remove white space from the beginning and end of scientific names
-               nome_cientifico = str_trim(nome_cientifico),
-
-               # Capitalization inconsistency
-               nome_cientifico = tolower(nome_cientifico),
-               nome_cientifico = R.utils::capitalize(nome_cientifico),
-
-               # get only the scientific name, without taxonomist's names
-               nome_cientifico = str_extract(nome_cientifico,
-                                             '(\\w+\\s\\w+)(-\\w+)?(\\s\\w+\\ssubsp.\\s\\w+)?(\\ssubsp.\\s\\w+)?(\\svar.\\s\\w+)?(\\.\\s\\w+)?')
-        )
-
     # Get unique scientific names form the input data set
     input_names <- unique(dataframe$nome_cientifico)
     # Get data set column names
@@ -61,12 +44,30 @@ scientific_name_clean <- function(dataframe) {
         summarise(dispositivo_legal = paste(unique(dispositivo_legal), collapse = ", "))
 
     # Read "reflora" data set to get specie geographic distribution
-    reflora <- read.csv2(
-        'https://raw.githubusercontent.com/robson-cruz/endangeredBrazilianPlantSpecies/main/data/reflora_v393.400.csv',
-        fileEncoding = "latin1"
-    ) %>%
-        select(c(2, 4, 5, 9, 11, 12, 13, 14))
+    # reflora <- readr::read_csv2(
+    #     'https://raw.githubusercontent.com/robson-cruz/endangeredBrazilianPlantSpecies/main/data/reflora20230606.csv'
+    # ) %>%
+    #     select(specie, locationID) %>%
+    #     rename(specieReflora = specie)
 
+    # Basic data cleaning
+    dataframe %<>%
+        # remove extra white space between genus and epithet
+        mutate(nome_cientifico = str_squish(nome_cientifico),
+
+               # remove white space from the beginning and end of scientific names
+               nome_cientifico = str_trim(nome_cientifico),
+
+               # Capitalization inconsistency
+               nome_cientifico = tolower(nome_cientifico),
+               nome_cientifico = R.utils::capitalize(nome_cientifico),
+
+               # get only the scientific name, without taxonomist's names
+               nome_cientifico = str_extract(
+                       nome_cientifico,
+                       '(\\w+\\s\\w+)(-\\w+)?(\\s\\w+\\ssubsp.\\s\\w+)?(\\ssubsp.\\s\\w+)?(\\svar.\\s\\w+)?(\\.\\s\\w+)?'
+               )
+        )
 
     # Using POST method in globalnames API
     post_global_names <- httr::POST(
@@ -83,10 +84,10 @@ scientific_name_clean <- function(dataframe) {
         ) %>%
         select(-c(matchType, curation)) %>%
         tidyr::unnest_wider(bestResult) %>%
-        # mutate(
-        #     familia = gsub(".*(\\b\\w+ceae\\b).*", "\\1", classificationPath)
-        # ) %>%
-        select(submitedName, typo)
+        mutate(
+            familia = gsub(".*(\\b\\w+ceae\\b).*", "\\1", classificationPath)
+        ) %>%
+        select(submitedName, typo, isSynonym, currentCanonicalSimple, familia)
 
     # Join data
     dataframe %<>%
@@ -95,8 +96,10 @@ scientific_name_clean <- function(dataframe) {
                   by = c("nome_cientifico" = "submitedName"),
                   relationship = "many-to-many") %>%
         distinct(id, .keep_all = TRUE) %>%
-        select(id, all_of(col_names), typo) %>%
-        rename(erro_digitação = typo)
+        select(id, all_of(col_names), typo, isSynonym, currentCanonicalSimple, familia) %>%
+        rename(nome_aceito = currentCanonicalSimple,
+               erro_digitação = typo,
+               sinônimo = isSynonym)
 
     dataframe %<>%
         left_join(port, by = c("nome_aceito" = "nome_cientifico"),
@@ -148,18 +151,18 @@ scientific_name_clean <- function(dataframe) {
             fileEncoding = "latin1"
         )
     }
-
+    
     # Save forest inventory
     output_dir <- "./output/"
     if (!dir.exists(output_dir)) dir.create(output_dir)
-
+    
     write.csv2(
         dataframe,
         paste0(output_dir, "Inventario_Processado.csv"),
         fileEncoding = "latin1",
         row.names = FALSE
     )
-
+    
     # Assign the new data frame to the user's global environment
     assign("dataframe", dataframe, envir = .GlobalEnv)
 }
