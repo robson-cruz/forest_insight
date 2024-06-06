@@ -69,7 +69,7 @@ basal_area_ut <- function(dataframe) {
                 size = 10,
                 hjust = 0.5),
             axis.title.x = element_text(size = 9),
-            axis.title.y = element_text(size = 9),
+            axis.title.y = element_text(size = 9, angle = 90, hjust = 0.5),
             axis.text.x = element_text(size = 7),
             axis.text.y = element_text(size = 7),
             legend.position = "bottom",
