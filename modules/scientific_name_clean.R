@@ -63,6 +63,7 @@ scientific_name_clean <- function(dataframe) {
     
     # Get unique scientific names form the input data set
     input_names <- unique(dataframe$nome_cientifico)
+    
     # Get data set column names
     col_names <- names(dataframe)
 
@@ -138,6 +139,7 @@ scientific_name_clean <- function(dataframe) {
         distinct(num_arvore, .keep_all = TRUE) |>
         mutate(specie_clean = if_else(!is.na(acceptedNameUsage), acceptedNameUsage, specie)) |>
         mutate(ocor_amz = if_else(specie == "" | specie %in% reflora_not_amz$specie, FALSE, TRUE)) |>
+        mutate(ocor_amz = if_else(!sp_completa & specie %in% reflora_not_amz$genus, FALSE, TRUE)) |>
         left_join(reflora_location_by_state, by = c("specie_clean" = "specie"), relationship = "many-to-many") |>
         mutate(ocor_uf_pa_aux = stringr::str_extract(state, "PA")) |>
         mutate(ocor_uf_pa = if_else(is.na(ocor_uf_pa_aux), FALSE, TRUE)) |>
