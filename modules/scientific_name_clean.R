@@ -138,6 +138,7 @@ scientific_name_clean <- function(dataframe) {
         mutate(specie = if_else(is.na(id), "", paste(genus, specificEpithet, sep = " "))) |>
         distinct(num_arvore, .keep_all = TRUE) |>
         mutate(specie_clean = if_else(!is.na(acceptedNameUsage), acceptedNameUsage, specie)) |>
+        mutate(sp_completa = if_else(grepl("^\\w+$", nome_cientifico), FALSE, TRUE)) |>
         mutate(ocor_amz = if_else(specie == "" | specie %in% reflora_not_amz$specie, FALSE, TRUE)) |>
         mutate(ocor_amz = if_else(!sp_completa & specie %in% reflora_not_amz$genus, FALSE, TRUE)) |>
         left_join(reflora_location_by_state, by = c("specie_clean" = "specie"), relationship = "many-to-many") |>
