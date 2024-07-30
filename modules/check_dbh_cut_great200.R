@@ -36,7 +36,7 @@ dbh_gt200 <- function(dataframe) {
         )
         
         writeLines(
-            text = paste("No inventário florestal conta(m)", nrow(dbh_gt200),
+            text = paste("No inventário florestal consta(m)", nrow(dbh_gt200),
                          "árvore(s) selecionada(s) para corte com dap maior do que 200cm."),
             con = paste0(issue_dir, "Arvores_Corte_Dap_Maior_200cm.txt")
         )
