@@ -36,7 +36,7 @@
 #' @keywords threatened species conservation logging
 check_threatened_species_for_logging <- function(dataframe) {
     
-    decreto5975 <- c("Bertholletia excelsa", "Hevea Brasiliensis")
+    decreto5975 <- c("Bertholletia excelsa", "Hevea brasiliensis")
     
     df_output <- dataframe %>%
         filter(
